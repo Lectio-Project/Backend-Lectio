@@ -1,17 +1,17 @@
 usuario=
-id, nome, email,senha, [generos], [autores], [titulos], username, bio, imagemUrl, criadoEm, atualizadoEm
+id, nome, email,senha, [generos], [autores], [livro], username, bio, imagemUrl, criadoEm, atualizadoEm
 
 livro=
-id, nome, idLivro, genero, sinopse, imagemUrl, somaAvalição, ContadorAvalições, mediaAvaliação criadoEm, atualizadoEm, editora, anoDePublicação
+id, nome, [genero], sinopse, imagemUrl, somaAvalição, ContadorAvalições, mediaAvaliação, editora, anoDePublicação
 
 comentarios=
 id, idLivro, idUsuario, texto, criadoEm, atualizadoEm, notaLivro
 
-genero=
-id, nome
+-- genero=
+-- id, nome
 
-autores
-id, nome, [genero], img, resumoCarreira, localNascimento, criadoEm, atualizadoEm
+-- autores
+-- id, nome, [genero], img, resumoCarreira, localNascimento, criadoEm, atualizadoEm
 
-pensamento
-id, frase, idAutor, nomeDoAutor, criadoEm, atualizadoEm
+-- pensamento
+-- id, frase, idAutor, nomeDoAutor, criadoEm, atualizadoEm
