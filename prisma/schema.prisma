@@ -82,6 +82,8 @@ model GenderAuthor {
   genderId String @db.ObjectId
   author   Author @relation(fields: [authorId], references: [id])
   authorId String @db.ObjectId
+
+  @@map("gender_author")
 }
 
 model Author {
