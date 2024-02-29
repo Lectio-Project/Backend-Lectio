@@ -2,3 +2,10 @@
 
 POST http://localhost:3333/users
 Content-Type: application/json
+
+{
+  "name": "Teste teste",
+  "email": "teste1@teste.com",
+  "password": "@Teste123",
+  "confirmPassword": "@Teste123"
+}
