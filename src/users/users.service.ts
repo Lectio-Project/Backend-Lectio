@@ -27,7 +27,7 @@ export class UsersService {
     }
 
     if (image) {
-      createUserDto.image = await upload(image);
+      createUserDto.image = await upload(image, 'profiles');
     }
 
     const newUserName =
