@@ -5,7 +5,14 @@ Content-Type: application/json
 
 {
   "name": "Teste teste",
-  "email": "teste1@teste.com",
+  "email": "teste2@teste.com",
   "password": "@Teste123",
   "confirmPassword": "@Teste123"
 }
+
+
+### 
+GET http://localhost:3333/users
+
+### 
+GET http://localhost:3333/users/65e0ce538963b880c151ec355
