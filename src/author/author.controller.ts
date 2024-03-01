@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -14,18 +13,18 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginDto } from './dto/login-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UsersService } from './users.service';
+import { AuthorService } from './author.service';
+import { CreateAuthorDto } from './dto/create-author.dto';
+import { UpdateAuthorDto } from './dto/update-author.dto';
 
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+@Controller('authors')
+export class AuthorController {
+  constructor(private readonly authorService: AuthorService) {}
+
   @UseInterceptors(FileInterceptor('image'))
   @Post()
   create(
-    @Body() createUserDto: CreateUserDto,
+    @Body() createAuthorDto: CreateAuthorDto,
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
@@ -39,32 +38,24 @@ export class UsersController {
     )
     image?: Express.Multer.File,
   ) {
-    if (createUserDto.password !== createUserDto.confirmPassword) {
-      throw new BadRequestException('Passwords do not match');
-    }
-    return this.usersService.create(image, createUserDto);
-  }
-
-  @Post('sign-in')
-  login(@Body() loginDto: LoginDto) {
-    return this.usersService.login(loginDto);
+    return this.authorService.create(createAuthorDto, image);
   }
 
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.authorService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+    return this.authorService.findOne(id);
   }
 
   @UseInterceptors(FileInterceptor('image'))
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() updateAuthorDto: UpdateAuthorDto,
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
@@ -78,15 +69,12 @@ export class UsersController {
     )
     image?: Express.Multer.File,
   ) {
-    if (updateUserDto.password !== updateUserDto.confirmPassword) {
-      throw new BadRequestException('Passwords do not match');
-    }
-    return this.usersService.update(id, updateUserDto, image);
+    return this.authorService.update(id, updateAuthorDto, image);
   }
 
   @HttpCode(204)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+    return this.authorService.remove(id);
   }
 }
