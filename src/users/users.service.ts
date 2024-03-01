@@ -8,12 +8,12 @@ import {
 import * as bcryptjs from 'bcryptjs';
 import { AuthService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import deleteFile from 'src/utils/bucketIntegration/delete';
 import upload from 'src/utils/bucketIntegration/upload';
 import generateUsername from 'src/utils/formats/createUsername';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { number } from 'zod';
 
 @Injectable()
 export class UsersService {
@@ -188,9 +188,15 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    await this.repository.user.delete({
+    const { imageUrl } = await this.repository.user.findUniqueOrThrow({
       where: { id },
+      select: { imageUrl: true },
     });
+    await Promise.all([
+      deleteFile(imageUrl, 'profiles'),
+      this.repository.user.delete({ where: { id } }),
+    ]);
+    return;
   }
 
   private async getByEmail(email: string, id?: string) {
