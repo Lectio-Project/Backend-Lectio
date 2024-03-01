@@ -1,15 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcryptjs from 'bcryptjs';
+import { AuthService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import upload from 'src/utils/bucketIntegration/upload';
 import generateUsername from 'src/utils/formats/createUsername';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly repository: PrismaService) {}
+  constructor(
+    private readonly repository: PrismaService,
+    private readonly jwt: AuthService,
+  ) {}
   async create(image: Express.Multer.File, createUserDto: CreateUserDto) {
     const queries = [
       this.getByEmail(createUserDto.email),
@@ -49,6 +59,37 @@ export class UsersService {
         imageUrl: imageDto,
       },
     });
+  }
+
+  async login(loginDto: LoginDto) {
+    const user = await this.getByEmail(loginDto.email);
+
+    if (!user) {
+      throw new NotFoundException('User credentials do not match');
+    }
+
+    const passwordIsMatch = await bcryptjs.compare(
+      loginDto.password,
+      user.password,
+    );
+
+    if (!passwordIsMatch) {
+      throw new UnauthorizedException('User credentials do not match');
+    }
+
+    const token = this.jwt.generateToken(user);
+
+    const { id, name, email, username, bio, imageUrl } = user;
+
+    return {
+      id,
+      name,
+      email,
+      username,
+      bio,
+      imageUrl,
+      token,
+    };
   }
 
   // colocar o guard de auth
