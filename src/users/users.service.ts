@@ -146,8 +146,10 @@ export class UsersService {
     return updateUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.repository.user.delete({
+      where: { id },
+    });
   }
 
   private async getByEmail(email: string, id?: string) {
