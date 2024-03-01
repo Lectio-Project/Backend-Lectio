@@ -15,11 +15,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
-import { LoginDto } from './dto/login-user.dto';
 
-@Controller('')
+@Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @UseInterceptors(FileInterceptor('image'))
