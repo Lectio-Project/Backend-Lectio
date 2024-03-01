@@ -33,7 +33,7 @@ export class UsersController {
             mimetypes: ['image/jpeg', 'image/png', 'image/jpg'],
           }),
         ],
-        errorHttpStatusCode: 404,
+        errorHttpStatusCode: 400,
       }),
     )
     image?: Express.Multer.File,
@@ -60,8 +60,26 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [
+          new IsValidImageFile({
+            mimetypes: ['image/jpeg', 'image/png', 'image/jpg'],
+          }),
+        ],
+        errorHttpStatusCode: 400,
+      }),
+    )
+    image?: Express.Multer.File,
+  ) {
+    if (updateUserDto.password !== updateUserDto.confirmPassword) {
+      throw new BadRequestException('Passwords do not match');
+    }
+    return this.usersService.update(id, updateUserDto, image);
   }
 
   @Delete(':id')
