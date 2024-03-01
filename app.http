@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "name": "Teste teste",
-  "email": "teste2@teste.com",
+  "email": "teste10@teste.com",
   "password": "@Teste123",
   "confirmPassword": "@Teste123"
 }
@@ -14,5 +14,17 @@ Content-Type: application/json
 ### 
 GET http://localhost:3333/users
 
+
+###
+PATCH http://localhost:3333/users/65e0ce538963b880c151ec35
+Content-Type: application/json
+
+{
+  "name": "MARIA SILVA SANTOS",
+  "email": "mariasilva@teste.com",
+  "password": "@Teste1234",
+  "confirmPassword": "@Teste1234"
+}
+
 ### 
-GET http://localhost:3333/users/65e0ce538963b880c151ec355
+GET http://localhost:3333/users/65e0ce538963b880c151ec35

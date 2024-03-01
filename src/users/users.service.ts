@@ -6,6 +6,7 @@ import upload from 'src/utils/bucketIntegration/upload';
 import generateUsername from 'src/utils/formats/createUsername';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { number } from 'zod';
 
 @Injectable()
 export class UsersService {
@@ -48,12 +49,33 @@ export class UsersService {
         username: newUserName,
         imageUrl: imageDto,
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        username: true,
+        bio: true,
+        imageUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
   // colocar o guard de auth
   async findAll() {
-    return await this.repository.user.findMany();
+    return await this.repository.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        username: true,
+        bio: true,
+        imageUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   // colocar o guard de auth
@@ -62,21 +84,77 @@ export class UsersService {
       where: {
         id,
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        username: true,
+        bio: true,
+        imageUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+    image: Express.Multer.File,
+  ) {
+    const user = await this.repository.user.findUniqueOrThrow({
+      where: { id },
+    });
+
+    if (updateUserDto.email) {
+      const emailAlreadyExists = await this.getByEmail(updateUserDto.email, id);
+
+      if (emailAlreadyExists) {
+        throw new BadRequestException('Email already exists');
+      }
+    }
+
+    if (updateUserDto.password) {
+      updateUserDto.password = await bcryptjs.hash(updateUserDto.password, 8);
+    }
+
+    if (image) {
+      updateUserDto.image = await upload(image, 'profiles');
+    }
+
+    const {
+      image: imageDto,
+      checked,
+      confirmPassword,
+      ...rest
+    } = updateUserDto;
+    const updateUser = await this.repository.user.update({
+      where: { id },
+      data: { ...rest, imageUrl: imageDto },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        username: true,
+        bio: true,
+        imageUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return updateUser;
   }
 
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
 
-  private async getByEmail(email: string) {
-    return await this.repository.user.findUnique({
+  private async getByEmail(email: string, id?: string) {
+    return await this.repository.user.findFirst({
       where: {
         email,
+        id: { not: id },
       },
     });
   }
