@@ -4,8 +4,8 @@ POST http://localhost:3333/users
 Content-Type: application/json
 
 {
-  "name": "Teste teste",
-  "email": "teste10@teste.com",
+  "name": "João apagado novo",
+  "email": "joaoapagadonovo@teste.com",
   "password": "@Teste123",
   "confirmPassword": "@Teste123"
 }
@@ -28,3 +28,6 @@ Content-Type: application/json
 
 ### 
 GET http://localhost:3333/users/65e0ce538963b880c151ec35
+
+###
+DELETE http://localhost:3333/users/65e1c85d9c29e6cc4bb79bf6
