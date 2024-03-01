@@ -1,0 +1,8 @@
+GET http://localhost:3333/authors
+
+###
+GET http://localhost:3333/authors/65e208fc142cb004905674ba
+
+
+###
+DELETE http://localhost:3333/authors/65e2098d142cb004905674bb
