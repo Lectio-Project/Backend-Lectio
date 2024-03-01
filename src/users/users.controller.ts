@@ -16,8 +16,9 @@ import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { LoginDto } from './dto/login-user.dto';
 
-@Controller('users')
+@Controller('')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @UseInterceptors(FileInterceptor('image'))
@@ -41,6 +42,11 @@ export class UsersController {
       throw new BadRequestException('Passwords do not match');
     }
     return this.usersService.create(image, createUserDto);
+  }
+
+  @Post('sign-in')
+  login(@Body() loginDto: LoginDto) {
+    return this.usersService.login(loginDto);
   }
 
   @Get()

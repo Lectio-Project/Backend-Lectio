@@ -8,8 +8,8 @@ import {
   MinLength,
 } from 'class-validator';
 import { IsCompletelyName } from 'src/utils/validators/IsCompletelyName';
+import { IsNotDigitAndSpecialChar } from 'src/utils/validators/IsNotDigitAndSpecialChar';
 import { IsValidPassword } from 'src/utils/validators/IsValidPassword';
-import { IsNotDigitAndSpecialChar } from './../../utils/validators/IsNotDigitAndSpecialChar';
 
 export class CreateUserDto {
   @IsString()
