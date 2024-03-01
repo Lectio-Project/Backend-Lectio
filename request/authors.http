@@ -1,0 +1,8 @@
+
+GET http://localhost:3333/authors?genres=ficção
+
+###
+GET http://localhost:3333/authors/65e214704d77d1d7cb356ff7
+
+###
+DELETE http://localhost:3333/authors/65e20d0a155a27629463b03b
