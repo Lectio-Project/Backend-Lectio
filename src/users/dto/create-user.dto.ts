@@ -35,7 +35,7 @@ export class CreateUserDto {
   @MinLength(8)
   @MaxLength(20)
   @IsValidPassword()
-  comfirmPassword: string;
+  confirmPassword: string;
 
   @IsOptional()
   @IsString()
@@ -51,5 +51,5 @@ export class CreateUserDto {
 
   @IsBoolean()
   @IsNotEmpty()
-  checked: boolean;
+  checked: boolean = false;
 }

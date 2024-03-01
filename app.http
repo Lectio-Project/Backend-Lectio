@@ -1,9 +1,18 @@
 #rest client
 
-POST http://localhost:3333/sign-in
+POST http://localhost:3333/users
 Content-Type: application/json
 
 {
-  "email": "teste@teste.com",
-  "password": "@Teste123"
+  "name": "Teste teste",
+  "email": "teste2@teste.com",
+  "password": "@Teste123",
+  "confirmPassword": "@Teste123"
 }
+
+
+### 
+GET http://localhost:3333/users
+
+### 
+GET http://localhost:3333/users/65e0ce538963b880c151ec355

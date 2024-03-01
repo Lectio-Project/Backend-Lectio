@@ -1,12 +1,18 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
+  ParseFilePipe,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -15,10 +21,27 @@ import { LoginDto } from './dto/login-user.dto';
 @Controller('')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
+  @UseInterceptors(FileInterceptor('image'))
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [
+          new IsValidImageFile({
+            mimetypes: ['image/jpeg', 'image/png', 'image/jpg'],
+          }),
+        ],
+        errorHttpStatusCode: 404,
+      }),
+    )
+    image?: Express.Multer.File,
+  ) {
+    if (createUserDto.password !== createUserDto.confirmPassword) {
+      throw new BadRequestException('Passwords do not match');
+    }
+    return this.usersService.create(image, createUserDto);
   }
 
   @Post('sign-in')
@@ -33,7 +56,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
