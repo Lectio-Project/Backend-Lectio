@@ -47,7 +47,6 @@ export class AuthorController {
   @Get()
   findAll(@Query('genres') genres: string | Array<string>) {
     const genresArray = typeof genres === 'string' ? [genres] : genres;
-    console.log(genresArray);
 
     return this.authorService.findAll(genresArray);
   }

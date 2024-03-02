@@ -68,16 +68,14 @@ export class AuthorService {
   }
 
   async remove(id: string) {
-    const { imageUrl } = await this.repository.author.findUniqueOrThrow({
+    await this.repository.genderAuthor.deleteMany({
+      where: { authorId: id },
+    });
+    const { imageUrl } = await this.repository.author.delete({
       where: { id },
       select: { imageUrl: true },
     });
     deleteFile(imageUrl, 'authors');
-
-    await this.repository.genderAuthor.deleteMany({
-      where: { authorId: id },
-    }),
-      await this.repository.author.delete({ where: { id } });
 
     return;
   }
@@ -88,45 +86,44 @@ export class AuthorService {
     idAuthor?: string,
   ) {
     const { genres, ...rest } = authorDto;
+    const queries = [];
+    if (image) {
+      queries.push(upload(image, 'authors'));
+    }
+    if (genres) {
+      queries.push(
+        this.repository.gender.findMany({
+          where: { id: { in: genres } },
+          select: { id: true, gender: true },
+        }),
+      );
+    }
+
+    const promisses = await Promise.all(queries);
+    const promisesLength = promisses.length;
+    let imageUrl;
+    let genresDb;
+
+    switch (promisesLength) {
+      case 1:
+        typeof promisses[0] === 'string'
+          ? (imageUrl = promisses[0])
+          : (genresDb = promisses[0]);
+
+        break;
+
+      case 2:
+        imageUrl = promisses[0];
+        genresDb = promisses[1];
+        break;
+    }
+
+    if (genres && genresDb.length !== genres.length) {
+      throw new BadRequestException('Genres not found');
+    }
 
     const authorWithGenres = await this.repository.$transaction(
       async (txtPrisma: PrismaService) => {
-        const queries = [];
-        if (image) {
-          queries.push(upload(image, 'authors'));
-        }
-        if (genres) {
-          queries.push(
-            txtPrisma.gender.findMany({
-              where: { id: { in: genres } },
-              select: { id: true, gender: true },
-            }),
-          );
-        }
-
-        const promisses = await Promise.all(queries);
-        const promisesLength = promisses.length;
-        let imageUrl;
-        let genresDb;
-
-        switch (promisesLength) {
-          case 1:
-            typeof promisses[0] === 'string'
-              ? (imageUrl = promisses[0])
-              : (genresDb = promisses[0]);
-
-            break;
-
-          case 2:
-            imageUrl = promisses[0];
-            genresDb = promisses[1];
-            break;
-        }
-
-        if (genres && genresDb.length !== genres.length) {
-          throw new BadRequestException('Genres not found');
-        }
-
         let author;
         switch (action) {
           case 'create':
