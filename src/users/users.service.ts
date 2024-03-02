@@ -21,6 +21,16 @@ export class UsersService {
     private readonly repository: PrismaService,
     private readonly jwt: AuthService,
   ) {}
+  selectFields = {
+    id: true,
+    name: true,
+    email: true,
+    username: true,
+    bio: true,
+    imageUrl: true,
+    createdAt: true,
+    updatedAt: true,
+  };
   async create(image: Express.Multer.File, createUserDto: CreateUserDto) {
     const queries = [
       this.getByEmail(createUserDto.email),
@@ -59,16 +69,7 @@ export class UsersService {
         username: newUserName,
         imageUrl: imageDto,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        bio: true,
-        imageUrl: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: this.selectFields,
     });
   }
 
@@ -106,16 +107,7 @@ export class UsersService {
   // colocar o guard de auth
   async findAll() {
     return await this.repository.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        bio: true,
-        imageUrl: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: this.selectFields,
     });
   }
 
@@ -125,16 +117,7 @@ export class UsersService {
       where: {
         id,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        bio: true,
-        imageUrl: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: this.selectFields,
     });
   }
 
@@ -172,16 +155,7 @@ export class UsersService {
     const updateUser = await this.repository.user.update({
       where: { id },
       data: { ...rest, imageUrl: imageDto },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        bio: true,
-        imageUrl: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: this.selectFields,
     });
 
     return updateUser;

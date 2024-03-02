@@ -8,6 +8,7 @@ import {
   ParseFilePipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -38,12 +39,16 @@ export class AuthorController {
     )
     image?: Express.Multer.File,
   ) {
+    const { genres } = createAuthorDto;
+    createAuthorDto.genres = typeof genres === 'string' ? [genres] : genres;
     return this.authorService.create(createAuthorDto, image);
   }
 
   @Get()
-  findAll() {
-    return this.authorService.findAll();
+  findAll(@Query('genres') genres: string | Array<string>) {
+    const genresArray = typeof genres === 'string' ? [genres] : genres;
+
+    return this.authorService.findAll(genresArray);
   }
 
   @Get(':id')
@@ -69,6 +74,8 @@ export class AuthorController {
     )
     image?: Express.Multer.File,
   ) {
+    const { genres } = updateAuthorDto;
+    updateAuthorDto.genres = typeof genres === 'string' ? [genres] : genres;
     return this.authorService.update(id, updateAuthorDto, image);
   }
 
