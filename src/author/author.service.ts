@@ -68,13 +68,19 @@ export class AuthorService {
   }
 
   async remove(id: string) {
-    await this.repository.genderAuthor.deleteMany({
-      where: { authorId: id },
-    });
-    const { imageUrl } = await this.repository.author.delete({
-      where: { id },
-      select: { imageUrl: true },
-    });
+    const imageUrl = await this.repository.$transaction(
+      async (txtPrisma: PrismaService) => {
+        await txtPrisma.genderAuthor.deleteMany({
+          where: { authorId: id },
+        });
+        const { imageUrl } = await txtPrisma.author.delete({
+          where: { id },
+          select: { imageUrl: true },
+        });
+        return imageUrl;
+      },
+    );
+
     deleteFile(imageUrl, 'authors');
 
     return;
