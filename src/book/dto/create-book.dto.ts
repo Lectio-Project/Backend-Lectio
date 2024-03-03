@@ -1,7 +1,6 @@
 import {
   IsNotEmpty,
   IsNumberString,
-  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -19,10 +18,6 @@ export class CreateBookDto {
   @MinLength(50)
   @MaxLength(500)
   synopsis: string;
-
-  @IsString()
-  @IsOptional()
-  imageUrl: string;
 
   @IsString()
   @IsNotEmpty()

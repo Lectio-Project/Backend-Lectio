@@ -130,7 +130,7 @@ model Book {
   imageUrl          String
   totalGrade        Float?       @default(0)
   counterGrade      Int          @default(0)
-  AvgGrade          Float        @default(0)
+  avgGrade          Float        @default(0)
   publishingCompany String
   publishYear       String
   genderId          String       @db.ObjectId
