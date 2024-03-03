@@ -4,9 +4,10 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthorModule } from './author/author.module';
 import { GenresModule } from './genres/genres.module';
+import { BookModule } from './book/book.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, AuthorModule, GenresModule],
+  imports: [PrismaModule, UsersModule, AuthModule, AuthorModule, GenresModule, BookModule],
   controllers: [],
   providers: [],
 })

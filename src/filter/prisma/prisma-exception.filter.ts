@@ -22,6 +22,14 @@ export class PrismaExceptions implements ExceptionFilter {
           message: 'Invalid Id',
         });
         break;
+      case 'P2002':
+        const targuetSplit: string = exception.meta?.target as string;
+
+        response.status(409).json({
+          statusCode: 409,
+          message: `${targuetSplit.split('_')[1]} already exists`,
+        });
+        break;
       default:
         response.status(500).json({
           statusCode: 500,

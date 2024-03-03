@@ -29,5 +29,6 @@ export class CreateAuthorDto {
   birthplace: string;
 
   @IsArrayOfStringsOrString()
+  @IsNotEmpty()
   genres: any;
 }
