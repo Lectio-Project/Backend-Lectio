@@ -5,29 +5,22 @@ import {
 } from '@nestjs/common';
 import { Book } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import avgGradeCalc from 'src/utils/avgGrade';
 import upload from 'src/utils/bucketIntegration/upload';
-import avgGradeCalc from 'src/utils/validators/avgGrade';
-import { CreateBookServiceDto } from './dto/creat-book-service.dto';
-import { UpdateBookServiceDto } from './dto/update-book-service.dto';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
 export class BookService {
   constructor(private readonly repository: PrismaService) {}
 
-  async create(
-    createBookDto: CreateBookServiceDto,
-    image: Express.Multer.File,
-  ) {
-    const {
-      authorIds,
-      genderId,
-      name,
-      publishYear,
-      publishingCompany,
-      synopsis,
-    } = createBookDto;
+  async create(createBookDto: CreateBookDto, image: Express.Multer.File) {
+    const { authorId, ...rest } = createBookDto;
 
-    await this.validateInitialDataInDb({ ...createBookDto });
+    await this.validateInitialDataInDb({
+      ...rest,
+      authorId: authorId as Array<string>,
+    });
 
     const imageUrl = await upload(image, 'books');
 
@@ -35,40 +28,17 @@ export class BookService {
       async (txtPrisma: PrismaService) => {
         const book = await txtPrisma.book.create({
           data: {
-            name,
-            publishYear,
-            publishingCompany,
-            synopsis,
-            genderId,
+            ...rest,
             imageUrl,
             AuthorBook: {
-              create: authorIds.map(author => ({
+              create: (authorId as Array<string>).map(author => ({
                 author: {
                   connect: { id: author },
                 },
               })),
             },
           },
-          select: {
-            id: true,
-            name: true,
-            publishYear: true,
-            publishingCompany: true,
-            synopsis: true,
-            gender: true,
-            imageUrl: true,
-            AuthorBook: {
-              select: {
-                author: {
-                  select: {
-                    id: true,
-                    name: true,
-                    imageUrl: true,
-                  },
-                },
-              },
-            },
-          },
+          select: this.selectFieldsResult({ type: 'inserts' }),
         });
 
         return book;
@@ -78,8 +48,24 @@ export class BookService {
     return response;
   }
 
-  async findAll() {
-    return await this.repository.book.findMany();
+  async findAll(add?: Array<string>, filters?: Array<string>) {
+    const selectFields = { select: this.selectFieldsResult() };
+    if (add) {
+      selectFields.select = this.selectFieldsResult({
+        type: 'fields',
+        fields: add,
+      });
+      console.log(
+        this.selectFieldsResult({
+          type: 'fields',
+          fields: add,
+        }),
+      );
+    }
+    if (filters) {
+    }
+
+    return await this.repository.book.findMany(selectFields);
   }
 
   async findOne(id: string) {
@@ -90,73 +76,57 @@ export class BookService {
 
   async update(
     id: string,
-    updateBookDto: UpdateBookServiceDto,
+    updateBookDto: UpdateBookDto,
     image: Express.Multer.File,
   ) {
-    const {
-      authorIds,
-      grade,
-      genderId,
-      name,
-      publishYear,
-      publishingCompany,
-      synopsis,
-    } = updateBookDto;
+    const { authorId, grade, ...rest } = updateBookDto;
+
+    let data = { ...rest };
 
     const book = await this.validateInitialDataInDb({
       ...updateBookDto,
+      authorId: authorId as Array<string>,
       idBook: id,
     });
 
-    let imageUrl: string;
     if (image) {
-      imageUrl = await upload(image, 'books');
+      data['imageUrl'] = await upload(image, 'books');
     }
 
-    let avgGrade: number;
-    let counterGrade: number;
-    let totalGrade: number;
     if (grade) {
-      const { avg, counter, sum } = avgGradeCalc(
-        grade,
-        book.totalGrade,
-        book.counterGrade,
-      );
+      const result = avgGradeCalc(+grade, book.totalGrade, book.counterGrade);
 
-      avgGrade = avg;
-      totalGrade = sum;
-      counterGrade = counter;
+      data = {
+        ...data,
+        ...result,
+      };
     }
 
     const newBook = await this.repository.$transaction(
       async (txtPrisma: PrismaService) => {
+        if (authorId) {
+          await txtPrisma.authorBook.deleteMany({
+            where: {
+              bookId: id,
+            },
+          });
+        }
         const book = await txtPrisma.book.update({
           where: { id },
           data: {
-            name,
-            publishYear,
-            publishingCompany,
-            synopsis,
-            genderId,
-            imageUrl,
-            totalGrade,
-            counterGrade,
-            avgGrade,
+            ...data,
             AuthorBook: {
-              create: authorIds?.map(author => ({
+              create: (authorId as Array<string>)?.map(author => ({
                 author: {
                   connect: { id: author },
                 },
               })),
             },
           },
+          select: this.selectFieldsResult({ type: 'inserts' }),
         });
-        if (authorIds) {
-          await txtPrisma.authorBook.deleteMany({
-            where: { bookId: id, NOT: { authorId: { in: authorIds } } },
-          });
-        }
-        return book as Book;
+
+        return book;
       },
     );
 
@@ -165,21 +135,23 @@ export class BookService {
 
   async remove(id: string) {
     await this.repository.$transaction(async (txtPrisma: PrismaService) => {
+      await txtPrisma.authorBook.deleteMany({
+        where: { bookId: id },
+      });
       await txtPrisma.book.delete({
         where: { id },
-        include: { AuthorBook: { where: { bookId: id } } },
       });
     });
     return;
   }
 
   private async validateInitialDataInDb(data: {
-    authorIds?: Array<string>;
+    authorId?: Array<string>;
     genderId?: string;
     name?: string;
     idBook?: string;
   }) {
-    const { authorIds, genderId, name, idBook } = data;
+    const { authorId, genderId, name, idBook } = data;
 
     const promises = {
       authorId: async (authorIds: Array<string>) => {
@@ -192,9 +164,11 @@ export class BookService {
           where: { id: genderId },
         });
       },
-      name: async (name: string) => {
-        return this.repository.book.findUnique({
-          where: { name: name },
+      name: async (name: string, idBook: string) => {
+        return this.repository.book.findFirst({
+          where: {
+            OR: [{ id: idBook }, { name: name }],
+          },
         });
       },
     };
@@ -202,19 +176,13 @@ export class BookService {
     const queries = [];
     let book;
 
-    if (authorIds) {
-      queries.push(promises.authorId(authorIds));
-    }
-    if (genderId) {
-      queries.push(promises.genderId(genderId));
-    }
-    if (name) {
-      queries.push(promises.name(name));
-    }
+    authorId ? queries.push(promises.authorId(authorId)) : null;
+    genderId ? queries.push(promises.genderId(genderId)) : null;
+    name ? queries.push(promises.name(name, idBook)) : null;
 
     const results = await Promise.all(queries);
 
-    if (authorIds && results[0].length !== authorIds.length) {
+    if (authorId && results[0].length !== authorId.length) {
       throw new NotFoundException('Author not found');
     }
 
@@ -227,5 +195,119 @@ export class BookService {
     }
 
     return book as Book;
+  }
+
+  private selectFieldsResult(options?: {
+    type?: 'inserts' | 'fields';
+    fields?: Array<string>;
+  }) {
+    let selectFields: any = {
+      id: true,
+      name: true,
+      publishYear: true,
+      publishingCompany: true,
+      synopsis: true,
+      imageUrl: true,
+      totalGrade: true,
+      counterGrade: true,
+      avgGrade: true,
+    };
+
+    if (!options) {
+      return selectFields;
+    }
+
+    const { type, fields } = options;
+
+    if (type === 'inserts') {
+      selectFields = {
+        ...selectFields,
+        gender: true,
+        AuthorBook: {
+          select: {
+            author: {
+              select: {
+                id: true,
+                name: true,
+                imageUrl: true,
+              },
+            },
+          },
+        },
+      };
+    }
+
+    if (type === 'fields' && fields.includes('author')) {
+      selectFields = {
+        ...selectFields,
+        AuthorBook: {
+          select: {
+            author: {
+              select: {
+                id: true,
+                name: true,
+                imageUrl: true,
+              },
+            },
+          },
+        },
+      };
+    }
+
+    if (type === 'fields' && fields.includes('gender')) {
+      selectFields = {
+        ...selectFields,
+        gender: true,
+      };
+    }
+
+    if (type === 'fields' && fields.includes('user')) {
+      selectFields = {
+        ...selectFields,
+        UserBook: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                imageUrl: true,
+                name: true,
+              },
+            },
+          },
+        },
+      };
+    }
+
+    if (type === 'fields' && fields.includes('thought')) {
+      selectFields = {
+        ...selectFields,
+        Thought: {
+          select: {
+            id: true,
+            text: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+      };
+    }
+
+    if (type === 'fields' && fields.includes('comment')) {
+      selectFields = {
+        ...selectFields,
+        Comment: {
+          select: {
+            id: true,
+            text: true,
+            createdAt: true,
+            updatedAt: true,
+            userId: true,
+          },
+        },
+      };
+    }
+
+    return selectFields;
   }
 }

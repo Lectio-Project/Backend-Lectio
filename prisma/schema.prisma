@@ -129,11 +129,13 @@ model Book {
   synopsis          String
   imageUrl          String
   totalGrade        Float?       @default(0)
-  counterGrade      Int          @default(0)
-  avgGrade          Float        @default(0)
+  counterGrade      Int?         @default(0)
+  avgGrade          Float?       @default(0)
   publishingCompany String
   publishYear       String
   genderId          String       @db.ObjectId
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
   gender            Gender       @relation(fields: [genderId], references: [id])
   UserBook          UserBook[]
   Thought           Thought[]

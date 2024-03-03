@@ -3,19 +3,20 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseFilePipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { BookService } from './book.service';
-import { CreateBookServiceDto } from './dto/creat-book-service.dto';
 import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookServiceDto } from './dto/update-book-service.dto';
+import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('books')
@@ -40,18 +41,18 @@ export class BookController {
     image?: Express.Multer.File,
   ) {
     const { authorId } = createBookDto;
+    createBookDto.authorId =
+      typeof authorId === 'string' ? [authorId] : authorId;
 
-    const createBookServiceDto: CreateBookServiceDto = {
-      ...createBookDto,
-      authorIds: Array.isArray(authorId) ? authorId : [authorId],
-    };
-
-    return this.bookService.create(createBookServiceDto, image);
+    return this.bookService.create(createBookDto, image);
   }
 
   @Get()
-  findAll() {
-    return this.bookService.findAll();
+  findAll(@Query() query: QueryBookDto) {
+    const { add, filters } = query;
+    const addArray = typeof add === 'string' ? [add] : add;
+    const filtersArray = typeof filters === 'string' ? [filters] : filters;
+    return this.bookService.findAll(addArray, filtersArray);
   }
 
   @Get(':id')
@@ -78,15 +79,12 @@ export class BookController {
     image?: Express.Multer.File,
   ) {
     const { authorId } = updateBookDto;
-
-    const updateBookServiceDto: UpdateBookServiceDto = {
-      ...updateBookDto,
-      authorIds: typeof authorId === 'string' ? [authorId] : authorId,
-      grade: Number(updateBookDto.grade),
-    };
-    return this.bookService.update(id, updateBookServiceDto, image);
+    updateBookDto.authorId =
+      typeof authorId === 'string' ? [authorId] : authorId;
+    return this.bookService.update(id, updateBookDto, image);
   }
 
+  @HttpCode(204)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.bookService.remove(id);
