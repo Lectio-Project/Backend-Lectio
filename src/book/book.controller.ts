@@ -49,10 +49,9 @@ export class BookController {
 
   @Get()
   findAll(@Query() query: QueryBookDto) {
-    const { add, filters } = query;
+    const { add, ...rest } = query;
     const addArray = typeof add === 'string' ? [add] : add;
-    const filtersArray = typeof filters === 'string' ? [filters] : filters;
-    return this.bookService.findAll(addArray, filtersArray);
+    return this.bookService.findAll(addArray, rest);
   }
 
   @Get(':id')

@@ -8,7 +8,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import avgGradeCalc from 'src/utils/avgGrade';
 import upload from 'src/utils/bucketIntegration/upload';
 import { CreateBookDto } from './dto/create-book.dto';
+import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+
+interface IFilters extends Omit<QueryBookDto, 'add'> {}
 
 @Injectable()
 export class BookService {
@@ -48,24 +51,29 @@ export class BookService {
     return response;
   }
 
-  async findAll(add?: Array<string>, filters?: Array<string>) {
-    const selectFields = { select: this.selectFieldsResult() };
-    if (add) {
-      selectFields.select = this.selectFieldsResult({
-        type: 'fields',
-        fields: add,
-      });
-      console.log(
-        this.selectFieldsResult({
-          type: 'fields',
-          fields: add,
-        }),
-      );
-    }
+  async findAll(add?: Array<string>, filters?: IFilters) {
+    const query = {
+      select: this.selectFieldsResult(),
+    };
+    const newAdd = filters ? [] : add;
+
     if (filters) {
+      const { where, filteredFilters } = this.filterFieldById({ ...filters });
+      query['where'] = where;
+
+      const set = add ? new Set([...add, ...filteredFilters]) : filteredFilters;
+
+      newAdd.push(...set);
     }
 
-    return await this.repository.book.findMany(selectFields);
+    if (newAdd.length > 0) {
+      query.select = this.selectFieldsResult({
+        type: 'fields',
+        fields: newAdd,
+      });
+    }
+
+    return await this.repository.book.findMany(query);
   }
 
   async findOne(id: string) {
@@ -309,5 +317,59 @@ export class BookService {
     }
 
     return selectFields;
+  }
+
+  private filterFieldById(filters?: {
+    authorId?: string | Array<string>;
+    genderId?: string | Array<string>;
+    userId?: string | Array<string>;
+    commentId?: string | Array<string>;
+    thoughtId?: string | Array<string>;
+  }) {
+    if (!filters) {
+      return;
+    }
+    const { authorId, genderId, userId, commentId, thoughtId } = filters;
+    const where: any = { AND: [] };
+    const tempAND = [];
+    const filteredFilters = [];
+
+    if (authorId) {
+      const newAuthorId = typeof authorId === 'string' ? [authorId] : authorId;
+      tempAND.push({
+        AuthorBook: { some: { author: { id: { in: newAuthorId } } } },
+      });
+      filteredFilters.push('author');
+    }
+
+    if (genderId) {
+      const newGenderId = typeof genderId === 'string' ? [genderId] : genderId;
+      tempAND.push({ gender: { id: { in: newGenderId } } });
+      filteredFilters.push('gender');
+    }
+
+    if (userId) {
+      const newUserId = typeof userId === 'string' ? [userId] : userId;
+      tempAND.push({ UserBook: { some: { userId: { in: newUserId } } } });
+      filteredFilters.push('user');
+    }
+
+    if (commentId) {
+      const newCommentId =
+        typeof commentId === 'string' ? [commentId] : commentId;
+      tempAND.push({ Comment: { some: { id: { in: newCommentId } } } });
+      filteredFilters.push('comment');
+    }
+
+    if (thoughtId) {
+      const newThoughtId =
+        typeof thoughtId === 'string' ? [thoughtId] : thoughtId;
+      tempAND.push({ Thought: { some: { id: { in: newThoughtId } } } });
+      filteredFilters.push('thought');
+    }
+
+    where.AND = tempAND;
+
+    return { where, filteredFilters };
   }
 }

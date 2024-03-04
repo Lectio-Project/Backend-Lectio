@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { IsArrayOfStringsOrString } from 'src/utils/validators/IsArrayOfStringsOrString';
+import { IsArrayOfIdStringsOrIdString } from 'src/utils/validators/IsArrayOfIdStringsOrIdString';
 import { IsValidYear } from 'src/utils/validators/IsValidYear';
 
 export class CreateBookDto {
@@ -29,10 +29,10 @@ export class CreateBookDto {
   publishYear: string;
 
   @IsNotEmpty()
-  @IsArrayOfStringsOrString()
+  @IsArrayOfIdStringsOrIdString()
   genderId: string;
 
   @IsNotEmpty()
-  @IsArrayOfStringsOrString()
+  @IsArrayOfIdStringsOrIdString()
   authorId: string | Array<string>;
 }
