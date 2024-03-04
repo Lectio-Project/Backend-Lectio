@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { IsArrayOfStringsOrString } from 'src/utils/validators/IsArrayOfStringsOrString';
+import { IsArrayOfIdStringsOrIdString } from 'src/utils/validators/IsArrayOfIdStringsOrIdString';
 import { IsCompletelyName } from 'src/utils/validators/IsCompletelyName';
 
 export class CreateAuthorDto {
@@ -28,6 +28,7 @@ export class CreateAuthorDto {
   @MaxLength(100)
   birthplace: string;
 
-  @IsArrayOfStringsOrString()
-  genres: any;
+  @IsArrayOfIdStringsOrIdString()
+  @IsNotEmpty()
+  genresId: string | Array<string>;
 }
