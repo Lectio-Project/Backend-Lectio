@@ -11,24 +11,21 @@ export class IsArrayOfIdStringsOrIdStringConstraint
   implements ValidatorConstraintInterface
 {
   validate(value: string | Array<string>) {
-    if (typeof value === 'string') {
+
+    if (typeof value === 'string' && value.length === 24) {
       return true;
     }
     if (Array.isArray(value)) {
-      if (
-        value.every(
-          item =>
-            item.length === 24 && value.every(item => typeof item === 'string'),
-        )
-      ) {
-        return true;
-      }
+      return value.every(
+        item => typeof item === 'string' && item.length === 24,
+      );
     }
+
     return false;
   }
 
   defaultMessage(args: ValidationArguments) {
-    return `${args.property} must be a string or an array of strings`;
+    return `${args.property} must contain a string or an array of strings with ids in the ObjectId format`;
   }
 }
 
