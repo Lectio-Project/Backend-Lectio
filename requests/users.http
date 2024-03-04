@@ -1,0 +1,46 @@
+#rest client
+
+POST http://localhost:3333/users
+Content-Type: application/json
+
+{
+  "name": "João apagado novo",
+  "email": "joaoapagadonovo@teste.com",
+  "password": "@Teste123",
+  "confirmPassword": "@Teste123"
+}
+
+###
+POST http://localhost:3333/users/sign-in
+Content-Type: application/json
+
+{
+  "email": "teste1@teste.com",
+  "password": "@Teste123" 
+}
+
+### 
+GET http://localhost:3333/users
+
+
+###
+PATCH http://localhost:3333/users/65e0ce538963b880c151ec35
+Content-Type: application/json
+
+{
+  "name": "MARIA SILVA SANTOS",
+  "email": "mariasilva@teste.com",
+  "password": "@Teste1234",
+  "confirmPassword": "@Teste1234"
+}
+
+### 
+GET http://localhost:3333/users/65e0ce538963b880c151ec35
+
+###
+DELETE http://localhost:3333/users/65e1dc0f480151fbdb977cee
+
+ code: 'P2002',
+  clientVersion: '5.10.2',
+  meta: { modelName: 'User', target: 'users_email_key' }
+
