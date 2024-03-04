@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 
 @ValidatorConstraint({ name: 'isArrayOrString', async: false })
-export class IsArrayOfStringsOrStringConstraint
+export class IsArrayOfIdStringsOrIdStringConstraint
   implements ValidatorConstraintInterface
 {
   validate(value: string | Array<string>) {
@@ -32,11 +32,11 @@ export class IsArrayOfStringsOrStringConstraint
   }
 }
 
-export function IsArrayOfStringsOrString(
+export function IsArrayOfIdStringsOrIdString(
   validationOptions?: ValidationOptions,
 ) {
   return function (object: Record<string, any>, property: string) {
-    Validate(IsArrayOfStringsOrStringConstraint, validationOptions)(
+    Validate(IsArrayOfIdStringsOrIdStringConstraint, validationOptions)(
       object,
       property,
     );
