@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -18,13 +14,15 @@ export class GenresService {
       throw new ConflictException('Gender already exists');
     }
 
-    await this.repository.gender.create({
+    return await this.repository.gender.create({
       data: {
         gender: createGenreDto.gender,
       },
+      select: {
+        id: true,
+        gender: true,
+      },
     });
-
-    return;
   }
 
   async findAll() {
@@ -32,60 +30,48 @@ export class GenresService {
   }
 
   async findOne(id: string) {
-    const gender = await this.repository.gender.findUnique({
+    return await this.repository.gender.findUniqueOrThrow({
       where: {
         id,
       },
     });
-
-    if (!gender) {
-      throw new NotFoundException('Gender not found');
-    }
-
-    return gender;
   }
 
   async update(id: string, updateGenreDto: UpdateGenreDto) {
-    await this.findOne(id);
-
     const gender = await this.getByName(updateGenreDto.gender, id);
 
     if (gender) {
       throw new ConflictException('Gender already exists');
     }
 
-    await this.repository.gender.update({
+    return await this.repository.gender.update({
       data: {
         gender: updateGenreDto.gender,
       },
       where: {
         id,
       },
+      select: {
+        id: true,
+        gender: true,
+      },
     });
-
-    return;
   }
 
   async remove(id: string) {
-    await this.findOne(id);
-
     await this.repository.gender.delete({
       where: {
         id,
       },
     });
-
-    return;
   }
 
   private async getByName(name: string, id?: string) {
-    const gender = await this.repository.gender.findFirst({
+    return await this.repository.gender.findFirst({
       where: {
         gender: name,
         id: { not: id },
       },
     });
-
-    return gender;
   }
 }
