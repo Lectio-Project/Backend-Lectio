@@ -62,7 +62,7 @@ export class UsersService {
       ...rest
     } = createUserDto;
 
-    return await this.repository.user.create({
+    const user = await this.repository.user.create({
       data: {
         ...rest,
         password: passwordHashed,
@@ -71,6 +71,13 @@ export class UsersService {
       },
       select: this.selectFields,
     });
+
+    const token = this.jwt.generateToken(user);
+
+    return {
+      ...user,
+      token,
+    };
   }
 
   async login(loginDto: LoginDto) {
