@@ -1,34 +1,38 @@
 import {
   IsNotEmpty,
-  IsOptional,
+  IsNumberString,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
 import { IsArrayOfIdStringsOrIdString } from 'src/utils/validators/IsArrayOfIdStringsOrIdString';
-import { IsCompletelyName } from 'src/utils/validators/IsCompletelyName';
+import { IsValidYear } from 'src/utils/validators/IsValidYear';
 
-export class CreateAuthorDto {
+export class CreateBookDto {
   @IsString()
   @IsNotEmpty()
-  @IsCompletelyName()
   name: string;
-
-  @IsString()
-  @IsOptional()
-  imageUrl: string;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(50)
-  carrerDescription: string;
+  @MaxLength(500)
+  synopsis: string;
 
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
-  birthplace: string;
+  publishingCompany: string;
 
-  @IsArrayOfIdStringsOrIdString()
+  @IsNumberString()
   @IsNotEmpty()
-  genres: any;
+  @IsValidYear()
+  publishYear: string;
+
+  @IsNotEmpty()
+  @IsArrayOfIdStringsOrIdString()
+  genderId: string;
+
+  @IsNotEmpty()
+  @IsArrayOfIdStringsOrIdString()
+  authorId: string | Array<string>;
 }
