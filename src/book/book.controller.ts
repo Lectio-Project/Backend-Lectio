@@ -55,8 +55,10 @@ export class BookController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bookService.findOne(id);
+  findOne(@Query() query: QueryBookDto, @Param('id') id: string) {
+    const { add } = query;
+    const addArray = typeof add === 'string' ? [add] : add;
+    return this.bookService.findOne(id, addArray);
   }
 
   @UseInterceptors(FileInterceptor('image'))

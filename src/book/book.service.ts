@@ -55,7 +55,7 @@ export class BookService {
     const query = {
       select: this.selectFieldsResult(),
     };
-    const newAdd = filters ? [] : add;
+    const newAdd = filters ? [] : [...new Set([...add])];
 
     if (filters) {
       const { where, filteredFilters } = this.filterFieldById({ ...filters });
@@ -76,9 +76,19 @@ export class BookService {
     return await this.repository.book.findMany(query);
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, add: Array<string>) {
+    let selectFields = this.selectFieldsResult();
+    if (add) {
+      const newAdd = [...new Set([...add])];
+
+      selectFields = this.selectFieldsResult({
+        type: 'fields',
+        fields: newAdd,
+      });
+    }
     return await this.repository.book.findUniqueOrThrow({
       where: { id },
+      select: selectFields,
     });
   }
 
