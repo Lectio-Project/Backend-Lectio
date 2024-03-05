@@ -13,6 +13,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -20,6 +21,7 @@ import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('books')
+@ApiTags('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
