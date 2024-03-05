@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthorModule } from './author/author.module';
 import { GenresModule } from './genres/genres.module';
 import { BookModule } from './book/book.module';
+import { CommentsModule } from './comments/comments.module';
 import { ThoughtModule } from './thought/thought.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { ThoughtModule } from './thought/thought.module';
     AuthorModule,
     GenresModule,
     BookModule,
+    CommentsModule,
     ThoughtModule,
   ],
   controllers: [],

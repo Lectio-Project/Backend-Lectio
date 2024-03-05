@@ -25,10 +25,16 @@ export class AuthGuard implements CanActivate {
         where: {
           id,
         },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+        },
       });
+
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Unauthorized');
+      throw new UnauthorizedException(error.message);
     }
   }
 }

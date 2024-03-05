@@ -4,10 +4,10 @@ POST http://localhost:3333/users
 Content-Type: application/json
 
 {
-  "name": "João apagado novo",
-  "email": "joaoapagadonovo@teste.com",
-  "password": "@Teste123",
-  "confirmPassword": "@Teste123"
+  "name": "Alfredo Amorim",
+  "email": "alfredoamorim@email.com",
+  "password": "@Alfredo123",
+  "confirmPassword": "@Alfredo123"
 }
 
 ###
@@ -15,8 +15,8 @@ POST http://localhost:3333/users/sign-in
 Content-Type: application/json
 
 {
-  "email": "teste1@teste.com",
-  "password": "@Teste123" 
+  "email": "alfredoamorim@email.com",
+  "password": "@Alfredo123" 
 }
 
 ### 
@@ -24,14 +24,14 @@ GET http://localhost:3333/users
 
 
 ###
-PATCH http://localhost:3333/users/65e0ce538963b880c151ec35
+PATCH http://localhost:3333/users/65e61e3a75f11b0038bff7dc
 Content-Type: application/json
 
 {
-  "name": "MARIA SILVA SANTOS",
-  "email": "mariasilva@teste.com",
-  "password": "@Teste1234",
-  "confirmPassword": "@Teste1234"
+  "name": "Alfredo Sousa Amorim",
+  "email": "alfredoamorim@email.com",
+  "password": "@Alfredo123",
+  "confirmPassword": "@Alfredo123"
 }
 
 ### 
