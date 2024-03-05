@@ -30,5 +30,5 @@ export class CreateAuthorDto {
 
   @IsArrayOfIdStringsOrIdString()
   @IsNotEmpty()
-  genres: any;
+  genresId: string | Array<string>;
 }
