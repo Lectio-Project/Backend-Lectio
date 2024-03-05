@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -72,10 +73,9 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('image'))
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
-  @Patch(':id')
+  @Patch()
   update(
-    @Req() req,
-    @Param('id') id: string,
+    @Req() req: Request,
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -93,14 +93,15 @@ export class UsersController {
     if (updateUserDto.password !== updateUserDto.confirmPassword) {
       throw new BadRequestException('Passwords do not match');
     }
-    return this.usersService.update(id, updateUserDto, image);
+
+    return this.usersService.update(req.user.id, updateUserDto, image);
   }
 
   @HttpCode(204)
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  @Delete()
+  remove(@Req() req: Request) {
+    return this.usersService.remove(req.user.id);
   }
 }

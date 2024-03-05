@@ -112,14 +112,12 @@ export class UsersService {
     };
   }
 
-  // colocar o guard de auth
   async findAll() {
     return await this.repository.user.findMany({
       select: this.selectFields,
     });
   }
 
-  // colocar o guard de auth
   async findOne(id: string) {
     return await this.repository.user.findUniqueOrThrow({
       where: {
@@ -166,14 +164,12 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    const { imageUrl } = await this.repository.user.findUniqueOrThrow({
+    const { imageUrl } = await this.repository.user.delete({
       where: { id },
       select: { imageUrl: true },
     });
-    await Promise.all([
-      deleteFile(imageUrl, 'profiles'),
-      this.repository.user.delete({ where: { id } }),
-    ]);
+    deleteFile(imageUrl, 'profiles');
+
     return;
   }
 
@@ -194,3 +190,5 @@ export class UsersService {
     });
   }
 }
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTYxZmIwNjRiNmYyOWI5ZjQ0OGFkOCIsIm5hbWUiOiJ0ZXN0ZSB0ZXN0ZSIsImVtYWlsIjoidGVzdGVAdGVzdGUuY29tIiwicGFzc3dvcmQiOiIkMmEkMDgkS29VTm1EODF1SjlZTzkzLnhrbmE0ZWdrWkVZSDJGb1lPV0V6cVZObWM5QmJHdDNVcVZ1VDYiLCJ1c2VybmFtZSI6IkB0ZXN0ZTE3MDk1ODAyMDc5OTkiLCJiaW8iOm51bGwsImltYWdlVXJsIjoiaHR0cHM6Ly9sZWN0aW8uczMudXMtZWFzdC0wMDUuYmFja2JsYXplYjIuY29tL3Byb2ZpbGVzL21hcmNhYWFvLWRlLWV4YW1lcy10ZXN0ZS1zbHVnLTE3MDk1ODAyMDYyMzguanBnIiwiY3JlYXRlZEF0IjoiMjAyNC0wMy0wNFQxOToyMzoyOC4wNDJaIiwidXBkYXRlZEF0IjoiMjAyNC0wMy0wNFQxOToyMzoyOC4wNDJaIiwiaWF0IjoxNzA5NjU1OTQ5LCJleHAiOjE3MTAyNjA3NDl9.DQzyO5-yK-Aj7zPukhwHlwO7HvsxGXWJQzpGdFTCJIA
