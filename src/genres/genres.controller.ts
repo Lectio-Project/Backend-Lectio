@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
@@ -17,6 +17,7 @@ import { GenresService } from './genres.service';
 @UseGuards(AuthGuard)
 @Controller('genres')
 @ApiTags('Genres')
+@ApiSecurity('JWT-auth')
 export class GenresController {
   constructor(private readonly genresService: GenresService) {}
 
