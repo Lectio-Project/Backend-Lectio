@@ -1,4 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { ApiProperty } from '@nestjs/swagger';
 import { CreateThoughtDto } from './create-thought.dto';
 
-export class UpdateThoughtDto extends PartialType(CreateThoughtDto) {}
+export class UpdateThoughtDto extends CreateThoughtDto {
+  @ApiProperty()
+  phrase: string;
+
+  @ApiProperty()
+  bookId: string;
+}
