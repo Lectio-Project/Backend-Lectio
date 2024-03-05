@@ -229,6 +229,8 @@ export class BookService {
       totalGrade: true,
       counterGrade: true,
       avgGrade: true,
+      createdAt: true,
+      updatedAt: true,
     };
 
     if (!options) {
@@ -325,6 +327,9 @@ export class BookService {
         },
       };
     }
+    // this.repository.book.findUniqueOrThrow({
+    //   select: { createdAt: true, updatedAt: true },
+    // });
 
     return selectFields;
   }

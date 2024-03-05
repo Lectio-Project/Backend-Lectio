@@ -11,6 +11,7 @@ export class IsArrayOfIdStringsOrIdStringConstraint
   implements ValidatorConstraintInterface
 {
   validate(value: string | Array<string>) {
+
     if (typeof value === 'string' && value.length === 24) {
       return true;
     }
