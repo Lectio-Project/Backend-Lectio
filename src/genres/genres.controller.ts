@@ -5,13 +5,15 @@ import {
   Get,
   Param,
   Patch,
-  Post
+  Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { GenresService } from './genres.service';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('genres')
 export class GenresController {
   constructor(private readonly genresService: GenresService) {}

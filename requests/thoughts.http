@@ -1,0 +1,19 @@
+POST http://localhost:3333/thought
+Content-Type: application/json
+{
+    "text": "só sei que nada sei",
+    "bookID": "65e50af3c0232ecf989b1719"
+}
+
+###
+GET http://localhost:3333/thought
+
+###
+GET http://localhost:3333/thought/ID
+
+###
+PATCH http://localhost:3333/thought/ID
+Content-Type: application/json
+
+###
+DELETE http://localhost:3333/thought/ID
