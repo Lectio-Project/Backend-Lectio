@@ -9,11 +9,14 @@ import {
   ParseFilePipe,
   Patch,
   Post,
+  Req,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login-user.dto';
@@ -52,19 +55,26 @@ export class UsersController {
     return this.usersService.login(loginDto);
   }
 
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @UseInterceptors(FileInterceptor('image'))
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(
+    @Req() req,
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile(
@@ -87,6 +97,8 @@ export class UsersController {
   }
 
   @HttpCode(204)
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);

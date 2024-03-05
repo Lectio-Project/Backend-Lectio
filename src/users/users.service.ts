@@ -51,7 +51,7 @@ export class UsersService {
       createUserDto.image = await upload(image, 'profiles');
     }
 
-    const newUserName =
+    createUserDto.userName =
       createUserDto.userName || generateUsername(createUserDto.name);
 
     const passwordHashed = await bcryptjs.hash(createUserDto.password, 8);
@@ -59,6 +59,7 @@ export class UsersService {
       checked,
       confirmPassword,
       image: imageDto,
+      userName,
       ...rest
     } = createUserDto;
 
@@ -66,7 +67,7 @@ export class UsersService {
       data: {
         ...rest,
         password: passwordHashed,
-        username: newUserName,
+        username: userName,
         imageUrl: imageDto,
       },
       select: this.selectFields,
@@ -133,10 +134,6 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
     image: Express.Multer.File,
   ) {
-    const user = await this.repository.user.findUniqueOrThrow({
-      where: { id },
-    });
-
     if (updateUserDto.email) {
       const emailAlreadyExists = await this.getByEmail(updateUserDto.email, id);
 
