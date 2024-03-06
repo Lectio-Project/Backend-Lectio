@@ -51,7 +51,7 @@ export class UsersService {
       createUserDto.image = await upload(image, 'profiles');
     }
 
-    const newUserName =
+    createUserDto.userName =
       createUserDto.userName || generateUsername(createUserDto.name);
 
     const passwordHashed = await bcryptjs.hash(createUserDto.password, 8);
@@ -59,6 +59,7 @@ export class UsersService {
       checked,
       confirmPassword,
       image: imageDto,
+      userName,
       ...rest
     } = createUserDto;
 
@@ -66,7 +67,7 @@ export class UsersService {
       data: {
         ...rest,
         password: passwordHashed,
-        username: newUserName,
+        username: userName,
         imageUrl: imageDto,
       },
       select: this.selectFields,
@@ -111,14 +112,12 @@ export class UsersService {
     };
   }
 
-  // colocar o guard de auth
   async findAll() {
     return await this.repository.user.findMany({
       select: this.selectFields,
     });
   }
 
-  // colocar o guard de auth
   async findOne(id: string) {
     return await this.repository.user.findUniqueOrThrow({
       where: {
@@ -133,10 +132,6 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
     image: Express.Multer.File,
   ) {
-    const user = await this.repository.user.findUniqueOrThrow({
-      where: { id },
-    });
-
     if (updateUserDto.email) {
       const emailAlreadyExists = await this.getByEmail(updateUserDto.email, id);
 
@@ -169,14 +164,12 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    const { imageUrl } = await this.repository.user.findUniqueOrThrow({
+    const { imageUrl } = await this.repository.user.delete({
       where: { id },
       select: { imageUrl: true },
     });
-    await Promise.all([
-      deleteFile(imageUrl, 'profiles'),
-      this.repository.user.delete({ where: { id } }),
-    ]);
+    deleteFile(imageUrl, 'profiles');
+
     return;
   }
 

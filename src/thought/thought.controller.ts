@@ -1,20 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
-import { ThoughtService } from './thought.service';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { CreateThoughtDto } from './dto/create-thought.dto';
 import { UpdateThoughtDto } from './dto/update-thought.dto';
-import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { ThoughtService } from './thought.service';
 
 @UseGuards(AuthGuard)
 @Controller('thought')
+@ApiTags('Thought')
+@ApiSecurity('JWT-auth')
 export class ThoughtController {
   constructor(private readonly thoughtService: ThoughtService) {}
 

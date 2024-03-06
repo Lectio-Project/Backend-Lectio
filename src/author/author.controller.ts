@@ -10,9 +10,12 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -20,6 +23,9 @@ import { QueryAuthorDto } from './dto/query-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 
 @Controller('authors')
+@ApiTags('authors')
+@ApiSecurity('JWT-auth')
+@UseGuards(AuthGuard)
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 

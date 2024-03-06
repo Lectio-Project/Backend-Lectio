@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEmail,
@@ -12,17 +13,20 @@ import { IsNotDigitAndSpecialChar } from 'src/utils/validators/IsNotDigitAndSpec
 import { IsValidPassword } from 'src/utils/validators/IsValidPassword';
 
 export class CreateUserDto {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @IsCompletelyName()
   @IsNotDigitAndSpecialChar()
   name: string;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
@@ -30,6 +34,7 @@ export class CreateUserDto {
   @IsValidPassword()
   password: string;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
@@ -37,19 +42,23 @@ export class CreateUserDto {
   @IsValidPassword()
   confirmPassword: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   @MaxLength(500)
   bio?: string;
 
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   userName?: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   image?: string;
 
+  @ApiProperty()
   @IsBoolean()
   @IsNotEmpty()
-  checked: boolean = false;
+  checked: boolean;
 }

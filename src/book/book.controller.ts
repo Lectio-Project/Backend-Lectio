@@ -10,9 +10,12 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -20,6 +23,9 @@ import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('books')
+@ApiTags('books')
+@ApiSecurity('JWT-auth')
+@UseGuards(AuthGuard)
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 

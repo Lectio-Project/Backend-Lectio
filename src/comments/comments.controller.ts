@@ -1,22 +1,25 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
+  Param,
+  Patch,
+  Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { AuthGuard } from 'src/guards/auth/auth.guard';
-import { Request } from 'express';
 
 @UseGuards(AuthGuard)
 @Controller('comments')
+@ApiTags('comments')
+@ApiSecurity('JWT-auth')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
