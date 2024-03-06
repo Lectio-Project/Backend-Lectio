@@ -29,7 +29,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @UseInterceptors(FileInterceptor('image'))
-  @Post()
+  @Post('sign-up')
   create(
     @Body() createUserDto: CreateUserDto,
     @UploadedFile(
@@ -73,7 +73,7 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('image'))
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
-  @Patch()
+  @Patch(':id')
   update(
     @Req() req: Request,
     @Body() updateUserDto: UpdateUserDto,
@@ -100,7 +100,7 @@ export class UsersController {
   @HttpCode(204)
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
-  @Delete()
+  @Delete(':id')
   remove(@Req() req: Request) {
     return this.usersService.remove(req.user.id);
   }
