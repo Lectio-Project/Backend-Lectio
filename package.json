@@ -6,7 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "nest build; prisma generate; prisma db push",
+    "vercel-build": "nest build; prisma generate; prisma db push",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:": "node dist/main.js",
