@@ -1,0 +1,46 @@
+#rest client
+
+POST http://localhost:3333/users
+Content-Type: application/json
+
+{
+  "name": "Alfredo Amorim",
+  "email": "alfredoamorim@email.com",
+  "password": "@Alfredo123",
+  "confirmPassword": "@Alfredo123"
+}
+
+###
+POST http://localhost:3333/users/sign-in
+Content-Type: application/json
+
+{
+  "email": "alfredoamorim@email.com",
+  "password": "@Alfredo123" 
+}
+
+### 
+GET http://localhost:3333/users
+
+
+###
+PATCH http://localhost:3333/users/65e61e3a75f11b0038bff7dc
+Content-Type: application/json
+
+{
+  "name": "Alfredo Sousa Amorim",
+  "email": "alfredoamorim@email.com",
+  "password": "@Alfredo123",
+  "confirmPassword": "@Alfredo123"
+}
+
+### 
+GET http://localhost:3333/users/65e0ce538963b880c151ec35
+
+###
+DELETE http://localhost:3333/users/65e1dc0f480151fbdb977cee
+
+ code: 'P2002',
+  clientVersion: '5.10.2',
+  meta: { modelName: 'User', target: 'users_email_key' }
+
