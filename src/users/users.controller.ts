@@ -73,7 +73,7 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('image'))
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
-  @Patch(':id')
+  @Patch()
   update(
     @Req() req: Request,
     @Body() updateUserDto: UpdateUserDto,
@@ -100,7 +100,7 @@ export class UsersController {
   @HttpCode(204)
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
-  @Delete(':id')
+  @Delete()
   remove(@Req() req: Request) {
     return this.usersService.remove(req.user.id);
   }

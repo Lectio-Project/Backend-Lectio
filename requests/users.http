@@ -24,15 +24,14 @@ GET http://localhost:3333/users
 
 
 ###
-PATCH http://localhost:3333/users/65e61e3a75f11b0038bff7dc
+PATCH https://backend-lectio-r3do.onrender.com/users/65e61e3a75f11b0038bff7dc
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTYxZTNhNzVmMTFiMDAzOGJmZjdkYyIsIm5hbWUiOiJBbGZyZWRvIFNvdXNhIEFtb3JpbSIsImVtYWlsIjoiYWxmcmVkb2Ftb3JpbUBlbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQwOCR1MEZjam9KMTAuL2w1MjJZajNDNUFlVERRYWQ0ajRKdE50alo0eDZCODlOcWVUU0p0dUpCQyIsInVzZXJuYW1lIjoiQGFsZnJlZG8xNzA5NTc5ODM0OTA3IiwiYmlvIjpudWxsLCJpbWFnZVVybCI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wMy0wNFQxOToxNzoxNC45NDRaIiwidXBkYXRlZEF0IjoiMjAyNC0wMy0wNFQyMDozNToxNC44MjJaIiwiaWF0IjoxNzA5NTkyMzIxLCJleHAiOjE3MTAxOTcxMjF9.ACAi67VrZ5nj2_3EVWtKfiq2Efi_lvQ2WQn3sgEdKNQ
 
 {
-  "name": "Alfredo Sousa Amorim",
-  "email": "alfredoamorim@email.com",
-  "password": "@Alfredo123",
-  "confirmPassword": "@Alfredo123"
+  "name": "Cleitim Super",
+  "username": "supercleitim",
+  "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sodales dapibus libero egestas blandit. Nulla facilisi. Sed volutpat euismod maximus. Quisque sollicitudin magna non molestie dignissim. Nunc aliquet pretium arcu, id sagittis lectus vestibulum semper."
 }
 
 ### 
