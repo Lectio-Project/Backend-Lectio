@@ -1,5 +1,5 @@
-# Lectio
-O Lectio trata-se de API de livros que conecta usuários e autores.
+# Lectio API
+API de livros que conecta usuários e autores.
 
 ## ⚙️ Instalação e Configuração 
 #### Siga os seguintes passos:
@@ -17,20 +17,19 @@ cd Backend-Lectio
 ```bash
 code .
 ```
-
 4. Renomei o arquivo **.env.example** para **.env** ou crie um arquivo **.env** na raiz do projeto
+   
+    4.1 Crie e/ou preencha no arquivo **.env** a variável de ambiente **DATABASE_URL** com o link para o seu banco de dados MongoDB
+   
+    4.2 No arquivo **.env** crie e/ou preencha o **JWT_SECRET_KEY** com a sua chave JWT secreta
 
-  - Crie e/ou preencha no arquivo **.env** a variável de ambiente **DATABASE_URL** com o link para o seu banco de dados MongoDB
-
-  - No arquivo **.env** crie e/ou preencha o **JWT_SECRET_KEY** com a sua chave JWT secreta
-
-  -  No arquivo **.env** crie e/ou preencha o **BUCKET_URL** com a URL do seu bucket
-
-  - No arquivo **.env** crie e/ou preencha o **BUCKET_APP_KEY** com a chave secreta do seu bucket
-  
-  - No arquivo **.env** crie e/ou preencha o **BUCKET_KEY_ID** com o ID do seu bucket
-
-  -  No arquivo **.env** crie e/ou preencha o **BUCKET_NAME** com o nome do seu bucket
+    4.3 No arquivo **.env** crie e/ou preencha o **BUCKET_URL** com a URL do seu bucket
+   
+    4.4 No arquivo **.env** crie e/ou preencha o **BUCKET_APP_KEY** com a chave secreta do seu bucket
+   
+    4.5 No arquivo **.env** crie e/ou preencha o **BUCKET_KEY_ID** com o ID do seu bucket
+   
+    4.6 No arquivo **.env** crie e/ou preencha o **BUCKET_NAME** com o nome do seu bucket
 
 5. Verifique se você possui o Node.js instalado em sua máquina, caso não instale-o,  [Baixe o Node.js aqui!](https://nodejs.org)
 
@@ -56,242 +55,126 @@ npx prisma db push
 
 ## 📡 Rotas
 ### Usuários 
-```ts
-@Controller('users')
-```
-
-- Listar todos os usuários:
-```ts
-@Get();
-```
-
-- Listar um único usuário:
-```ts
-@Get(':id');
-```
-
-- Cadastro de usuário:
-```ts
-@Post('sign-up');
-```
-
-- Login de usuário:
-```ts
-@Post('sign-in');
-```
-
-- Atualização de usuário:
-```ts
-@Patch();
-```
-
-- Remoção de usuário:
-```ts
-@Delete()
-```
-
-### Gêneros 
-```ts
-@Controller('genres')
-```
-
-- Listar todos os gêneros:
-```ts
-@Get();
-```
-
-- Listar um único gênero:
-```ts
-@Get(':id');
-```
-
-- Cadastro de gênero:
-```ts
-@Post();
-```
-
-- Atualização de gênero:
-```ts
-@Patch(':id');
-```
-
-- Remoção de gênero:
-```ts
-@Delete(':id')
-```
-
-### Autores 
-```ts
-@Controller('authors')
-```
-
-- Listar todos os autores:
-```ts
-@Get();
-```
-
-- Listar um único autor:
-```ts
-@Get(':id');
-```
-
-- Cadastro de autor:
-```ts
-@Post();
-```
-
-- Atualização de autor:
-```ts
-@Patch(':id');
-```
-
-- Remoção de autor:
-```ts
-@Delete(':id')
-```
-
-### Comentários 
-```ts
-@Controller('comments')
-```
-
-- Listar todos os comentários:
-```ts
-@Get();
-```
-
-- Listar um único comentário:
-```ts
-@Get(':id');
-```
-
-- Cadastro de comentário:
-```ts
-@Post();
-```
-
-- Atualização de comentário:
-```ts
-@Patch(':id');
-```
-
-- Remoção de comentário:
-```ts
-@Delete(':id')
-```
-
-### Pensamentos 
-```ts
-@Controller('thought')
-```
-
-- Listar todos os pensamentos:
-```ts
-@Get();
-```
-
-- Listar um único pensamento:
-```ts
-@Get(':id');
-```
-
-- Cadastro de pensamento:
-```ts
-@Post();
-```
-
-- Atualização de pensamento:
-```ts
-@Patch(':id');
-```
-
-- Remoção de pensamento:
-```ts
-@Delete(':id')
-```
-
-### Livros 
-```ts
-@Controller('books')
-```
-
-- Listar todos os livros:
-```ts
-@Get();
-```
-
-- Listar um único livro:
-```ts
-@Get(':id');
-```
-
-- Cadastro de livro:
-```ts
-@Post();
-```
-
-- Atualização de livro:
-```ts
-@Patch(':id');
-```
-
-- Remoção de livro:
-```ts
-@Delete(':id')
-```
-
-## 🆕 Funcionalidades
-### Usuários
-1. Cadastrar usuário
-2. Login de usuário
-3. Atualização de usuário
-4. Autenticação e Autorização
-5. Listagem de todos os usuários
-6. Listar um único usuário
-7. Remoção de usuário
+| Método | Rota | Subrota | Parâmetro | Headers | Campos |
+|:--------|:------|:---------|:-----------|:---------|:--------|
+POST | users | sign-up | Nenhum | Nenhum | name, email, password, confirmPassword |
+POST | users | sign-in | Nenhum | Nenhum | email, password |
+GET | users | Nenhuma | Nenhum | JsonWebToken | Nenhum |
+GET | users | Nenhuma | id | JsonWebToken | Nenhum |
+PATCH | users | Nenhuma | Nenhum | JsonWebToken | name, email, password, confirmPassword, username, bio, imageUrl |
+DELETE | users | Nenhuma | Nenhum | JsonWebToken | Nenhum |
 
 ### Gêneros
-1. Cadastrar gênero
-2. Listagem de todos os gêneros
-3. Listagem de um único gênero
-4. Atualização de gênero
-5. Remoção de gênero
+| Método | Rota | Subrota | Parâmetro | Headers | Campos |
+|:--------|:------|---------|:-----------|:---------|:--------|
+GET | genres | Nenhuma | Nenhum | JsonWebToken | Nenhum |
+GET | genres | Nenhuma | id | JsonWebToken | Nenhum |
+POST | genres | Nenhuma | Nenhum | JsonWebToken | gender |
+PATCH | genres | Nenhuma | id | JsonWebToken | gender |
+DELETE | genres | Nenhuma | id | JsonWebToken | Nenhum |
 
-### Livros
-1. Cadastrar livro
-2. Listagem de todos os livros
-3. Listagem de um único livro
-4. Atualização de livro
-5. Remoção de livro
+### Autores 
+| Método | Rota | Subrota | Parâmetro | Headers | Campos |
+|:--------|:------|:---------|:-----------|:---------|:--------|
+GET | authors | Nenhuma | Nenhum | JsonWebToken | Nenhum |
+GET | authors | Nenhuma | id | JsonWebToken | Nenhum |
+POST | authors | Nenhuma | Nenhum | JsonWebToken | imageUrl, name, carrerDescription, birthplace, genresId |
+PATCH | authors | Nenhuma | id | JsonWebToken | imageUrl, name, carrerDescription, birthplace, genresId |
+DELETE | authors | Nenhuma | id | JsonWebToken | Nenhum |
 
-### Autores
-1. Cadastrar autor
-2. Listagem de todos os autores
-3. Listagem de um único autor
-4. Atualização de autor
-5. Remoção de autor
+### Comentários 
+| Método | Rota | Subrota | Parâmetro | Headers | Campos |
+|:--------|:------|:---------|:-----------|:---------|:--------|
+GET | comments | Nenhuma | Nenhum | JsonWebToken | Nenhum |
+GET | comments | Nenhuma | id | JsonWebToken | Nenhum |
+POST | comments | Nenhuma | Nenhum | JsonWebToken | text, bookGrade, bookId |
+PATCH | comments | Nenhuma | id | JsonWebToken | text, bookGrade, bookId |
+DELETE | comments | Nenhuma | id | JsonWebToken | Nenhum |
 
-### Pensamentos
-1. Cadastrar pensamento
-2. Listagem de todos os pensamentos
-3. Listagem de um único pensamento
-4. Atualização de pensamento
-5. Remoção de pensamento
+### Pensamentos 
+| Método | Rota | Subrota | Parâmetro | Headers | Campos |
+|:--------|:------|:---------|:-----------|:---------|:--------|
+GET | thought | Nenhuma | Nenhum | JsonWebToken | Nenhum |
+GET | thought | Nenhuma | id | JsonWebToken | Nenhum |
+POST | thought | Nenhuma | Nenhum | JsonWebToken | phrase, bookId |
+PATCH | thought | Nenhuma | id | JsonWebToken | phrase, bookId |
+DELETE | thought | Nenhuma | id | JsonWebToken | Nenhum |
 
-### Comentários
-1. Cadastrar comentário
-2. Listagem de todos os comentários
-3. Listagem de um único comentário
-4. Atualização de comentário
-5. Remoção de comentário
+### Livros 
+| Método | Rota | Subrota | Parâmetro | Headers | Campos |
+|:--------|:------|:---------|:-----------|:---------|:--------|
+GET | books | Nenhuma | Nenhum | JsonWebToken | Nenhum |
+GET | books | Nenhuma | id | JsonWebToken | Nenhum |
+POST | books | Nenhuma | Nenhum | JsonWebToken | name, synopsis, publishingCompany, publishYear, genderId, authorId |
+PATCH | books | Nenhuma | id | JsonWebToken | name, synopsis, publishingCompany, publishYear, genderId, authorId |
+DELETE | books | Nenhuma | id | JsonWebToken | Nenhum |
+
+## 🆕 Funcionalidades
+
+### 👥 Usuários
+| Rota | Funcionalidade |
+|:------|:--------------|
+| users | cadastro de usuário |
+| users | Login de usuário |
+| users | Listar todos os usuários |
+| users | Listar usuário |
+| users | Atualização de usuário |
+| users | Exclusão de usuário |
+
+### ⚧️ Gêneros
+Rota | Funcionalidade |
+|:------|:------------|
+| genres | Cadastro de gênero |
+| genres | Listar todos os gêneros |
+| genres | Listar gênero |
+| genres | Atualização de gênero |
+| genres | Exclusão de gênero |
+
+### 📚 Livros
+Rota | Funcionalidade |
+|:------|:------------|
+| books | Cadastro de livro |
+| books | Listar todos os livros |
+| books | Listar livro |
+| books | Atualização de livro |
+| books | Exclusão de livro |
+
+### ✍🏼 Autores
+Rota | Funcionalidade |
+|:------|:------------|
+| authors | Cadastro de autor |
+| authors | Listar todos os autores |
+| authors | Listar autor |
+| authors | Atualização de autor |
+| authors | Exclusão de autor |
+
+### 💭 Pensamentos
+Rota | Funcionalidade |
+|:------|:------------|
+| thought | Cadastro de gênero |
+| thought | Listar todos os gêneros |
+| authors | Listar gênero |
+| thought | Atualização de gênero |
+| thought | Exclusão de gênero |
+
+### 󠁻󠁻󠁻󠁻󠁻󠁻󠁻⋯ Comentários
+Rota | Funcionalidade |
+|:------|:------------|
+| comments | Cadastro de comentário |
+| comments | Listar todos os comentários  |
+| comments | Listar comentário |
+| comments | Atualização de comentário |
+| comments | Exclusão de comentário |
 
 ## 🔧 Tecnologias
-- Nest
-- Express
-- TypeScript
-- Prisma
-- MongoDB
-- Swagger
+<p align="left">
+  <a href="https://www.typescriptlang.org/" target="_blank" title="TypeScript" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/typescript-colored.svg" width="36" height="36" alt="TypeScript" /></a>
+  <a href="https://expressjs.com/" target="_blank" title="Express" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/express-colored-dark.svg" width="36" height="36" alt="Express" /></a>
+  <a href="https://docs.nestjs.com/" title="Nest" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/nestjs-colored.svg" width="36" height="36" alt="NestJS" /></a>
+  <a href="https://www.prisma.io/" title="Prisma" target="_blank" rel="noreferrer"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prisma/prisma-original.svg" width="36" height="36" alt="Prisma" /></a>
+  <a href="https://www.mongodb.com/" title="MongoDB" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/mongodb-colored.svg" width="36" height="36" alt="MongoDB" /></a>
+<a href="https://swagger.io/" title="Swagger" target="_blank" rel="noreferrer"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg" width="36" height="36" alt="Swagger" /></a>     
+</p>          
   
 ## 🚀 Deploy
 - Link da API em produção:
