@@ -4,13 +4,15 @@ import { IsNotDigitAndSpecialChar } from 'src/utils/validators/IsNotDigitAndSpec
 
 export class CreateThoughtDto {
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  @IsNotDigitAndSpecialChar()
+  @IsString({ message: 'O campo frase deve ser uma string' })
+  @IsNotEmpty({ message: 'O campo frase é obrigatório' })
+  @IsNotDigitAndSpecialChar({
+    message: 'O campo frase não deve ter dígitos ou caracteres especiais',
+  })
   phrase: string;
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'O campo id do livro deve ser uma string' })
+  @IsNotEmpty({ message: 'O campo id do livro é obrigatório' })
   bookId: string;
 }
