@@ -182,4 +182,4 @@ Rota | Funcionalidade |
 https://backend-lectio-r3do.onrender.com/
 ```
 ----
-<p align="center">&copy; MIT License 2024, feito com 🖤 por <a href="https://github.com/alissonromaosantos" target="_blank">Alisson Romão</a>, <a href="https://github.com/vanessaribeiro03" target="_blank">Vanessa Ribeiro</a>, <a href="https://github.com/staviasz">Erick Staviasz</a> e <a href="https://github.com/Rochelrrc" target="_blank">Rochel Rodrigues</a>.</p>
+<p align="center">&copy; MIT License 2024, feito com 🖤 por <a href="https://github.com/alissonromaosantos" target="_blank">Alisson Romão</a>, <a href="https://github.com/vanessaribeiro03" target="_blank">Vanessa Ribeiro</a>, <a href="https://github.com/staviasz" target="_blank">Erick Staviasz</a> e <a href="https://github.com/Rochelrrc" target="_blank">Rochel Rodrigues</a>.</p>
