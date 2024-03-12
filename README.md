@@ -54,7 +54,7 @@ npx prisma db push
 ```
 
 ## 📡 Rotas
-### Usuários 
+### 👥 Usuários 
 | Método | Rota | Subrota | Parâmetro | Headers | Campos |
 |:--------|:------|:---------|:-----------|:---------|:--------|
 POST | users | sign-up | Nenhum | Nenhum | name, email, password, confirmPassword |
@@ -64,7 +64,7 @@ GET | users | Nenhuma | id | JsonWebToken | Nenhum |
 PATCH | users | Nenhuma | Nenhum | JsonWebToken | name, email, password, confirmPassword, username, bio, imageUrl |
 DELETE | users | Nenhuma | Nenhum | JsonWebToken | Nenhum |
 
-### Gêneros
+### ℹ️ Gêneros
 | Método | Rota | Subrota | Parâmetro | Headers | Campos |
 |:--------|:------|---------|:-----------|:---------|:--------|
 GET | genres | Nenhuma | Nenhum | JsonWebToken | Nenhum |
@@ -73,7 +73,7 @@ POST | genres | Nenhuma | Nenhum | JsonWebToken | gender |
 PATCH | genres | Nenhuma | id | JsonWebToken | gender |
 DELETE | genres | Nenhuma | id | JsonWebToken | Nenhum |
 
-### Autores 
+### ✍🏼 Autores 
 | Método | Rota | Subrota | Parâmetro | Headers | Campos |
 |:--------|:------|:---------|:-----------|:---------|:--------|
 GET | authors | Nenhuma | Nenhum | JsonWebToken | Nenhum |
@@ -82,7 +82,7 @@ POST | authors | Nenhuma | Nenhum | JsonWebToken | imageUrl, name, carrerDescrip
 PATCH | authors | Nenhuma | id | JsonWebToken | imageUrl, name, carrerDescription, birthplace, genresId |
 DELETE | authors | Nenhuma | id | JsonWebToken | Nenhum |
 
-### Comentários 
+### ⋯ Comentários 
 | Método | Rota | Subrota | Parâmetro | Headers | Campos |
 |:--------|:------|:---------|:-----------|:---------|:--------|
 GET | comments | Nenhuma | Nenhum | JsonWebToken | Nenhum |
@@ -91,7 +91,7 @@ POST | comments | Nenhuma | Nenhum | JsonWebToken | text, bookGrade, bookId |
 PATCH | comments | Nenhuma | id | JsonWebToken | text, bookGrade, bookId |
 DELETE | comments | Nenhuma | id | JsonWebToken | Nenhum |
 
-### Pensamentos 
+### 💭 Pensamentos 
 | Método | Rota | Subrota | Parâmetro | Headers | Campos |
 |:--------|:------|:---------|:-----------|:---------|:--------|
 GET | thought | Nenhuma | Nenhum | JsonWebToken | Nenhum |
@@ -100,7 +100,7 @@ POST | thought | Nenhuma | Nenhum | JsonWebToken | phrase, bookId |
 PATCH | thought | Nenhuma | id | JsonWebToken | phrase, bookId |
 DELETE | thought | Nenhuma | id | JsonWebToken | Nenhum |
 
-### Livros 
+### 📚 Livros 
 | Método | Rota | Subrota | Parâmetro | Headers | Campos |
 |:--------|:------|:---------|:-----------|:---------|:--------|
 GET | books | Nenhuma | Nenhum | JsonWebToken | Nenhum |
@@ -121,7 +121,7 @@ DELETE | books | Nenhuma | id | JsonWebToken | Nenhum |
 | users | Atualização de usuário |
 | users | Exclusão de usuário |
 
-### ⚧️ Gêneros
+### ℹ️ Gêneros
 Rota | Funcionalidade |
 |:------|:------------|
 | genres | Cadastro de gênero |
