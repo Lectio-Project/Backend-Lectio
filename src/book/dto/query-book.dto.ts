@@ -6,10 +6,10 @@ import { IsIncludedInOptions } from 'src/utils/validators/IsIncludedInOptions';
 export class QueryBookDto {
   @ApiProperty({
     required: false,
-    enum: ['author', 'gender', 'user', 'thought', 'comment'],
+    enum: ['user', 'thought', 'comment'],
   })
   @IsOptional()
-  @IsIncludedInOptions(['author', 'gender', 'user', 'thought', 'comment'])
+  @IsIncludedInOptions(['user', 'thought', 'comment'])
   add?: string | Array<string>;
 
   @ApiProperty({
