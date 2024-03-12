@@ -1,4 +1,4 @@
-import s3 from 'src/filter/config/aws';
+import s3 from 'src/config/aws';
 import slug from '../formats/slug';
 
 const upload = async (file: Express.Multer.File, folder: string) => {

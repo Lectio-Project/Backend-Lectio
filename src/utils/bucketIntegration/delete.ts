@@ -1,4 +1,4 @@
-import s3 from 'src/filter/config/aws';
+import s3 from 'src/config/aws';
 
 const deleteFile = async (url: string, folder: string) => {
   const path = `${folder}/${url.split('/').pop()}`;
