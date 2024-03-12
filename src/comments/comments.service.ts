@@ -16,7 +16,7 @@ export class CommentsService {
     const book = await this.getBookById(createCommentDto.bookId);
 
     if (!book) {
-      throw new NotFoundException('Book does not exist');
+      throw new NotFoundException('O livro não existe');
     }
 
     const { text, bookGrade, bookId } = createCommentDto;
@@ -75,7 +75,7 @@ export class CommentsService {
     const book = await this.getBookById(bookId);
 
     if (!book) {
-      throw new NotFoundException('Book does not exist');
+      throw new NotFoundException('O livro não existe');
     }
 
     const commentBelongsToTheUserLogged = await this.getCommentByUser(
@@ -85,7 +85,7 @@ export class CommentsService {
 
     if (!commentBelongsToTheUserLogged) {
       throw new UnauthorizedException(
-        'Comment does not exist or does not belong to the user',
+        'O comentário não existe ou não foi feito pelo usuário',
       );
     }
 
@@ -134,9 +134,9 @@ export class CommentsService {
     const book = await this.getBookById(comment.bookId);
 
     if (!book) {
-      throw new NotFoundException('Book does not exist');
+      throw new NotFoundException('O livro não existe');
     }
-
+    6;
     const commentBelongsToTheUserLogged = await this.getCommentByUser(
       id,
       userId,
@@ -144,7 +144,7 @@ export class CommentsService {
 
     if (!commentBelongsToTheUserLogged) {
       throw new UnauthorizedException(
-        'Comment does not exist or does not belong to the user',
+        'O comentário não existe ou não foi feito pelo usuário',
       );
     }
 
