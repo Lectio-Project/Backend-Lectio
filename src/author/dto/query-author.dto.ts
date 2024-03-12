@@ -9,7 +9,10 @@ export class QueryAuthorDto {
     required: false,
   })
   @IsOptional()
-  @IsArrayOfIdStringsOrIdString()
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do gênero deve conter uma string ou um array de strings no formato ObjectId',
+  })
   genresId?: string | Array<string>;
 
   @ApiProperty({

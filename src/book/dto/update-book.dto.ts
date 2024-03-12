@@ -7,7 +7,13 @@ export class UpdateBookDto extends PartialType(CreateBookDto) {
   @ApiProperty({
     required: false,
   })
-  @IsNumberString()
+  @IsNumberString(
+    {},
+    {
+      message:
+        'O campo ano de publicação do livro deve ser uma string numérica',
+    },
+  )
   @IsOptional()
   grade?: string;
 
