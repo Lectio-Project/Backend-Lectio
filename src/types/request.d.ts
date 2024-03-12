@@ -1,6 +1,6 @@
 import 'express';
 
-interface User {
+interface Props {
   id: string;
   email: string;
   name: string;
@@ -8,6 +8,7 @@ interface User {
 
 declare module 'express' {
   interface Request {
-    user: User;
+    user: Props;
+    admin: Props;
   }
 }

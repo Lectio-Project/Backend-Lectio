@@ -11,14 +11,14 @@ import {
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { AuthGuard } from 'src/guards/authUser/authUser.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @UseGuards(AuthGuard)
 @Controller('comments')
-@ApiTags('comments')
+@ApiTags('Comments')
 @ApiSecurity('JWT-auth')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
