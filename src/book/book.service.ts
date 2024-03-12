@@ -199,13 +199,13 @@ export class BookService {
     const results = await Promise.all(queries);
 
     if (authorId && results[0].length !== authorId.length) {
-      throw new NotFoundException('Author not found');
+      throw new NotFoundException('Autor não encontrado');
     }
 
     if (name && results[results.length - 1]) {
       const bookResult = results[results.length - 1] as Book;
       if (bookResult.id !== idBook) {
-        throw new ConflictException('Book already exists');
+        throw new ConflictException('O livro já existe');
       }
       book = bookResult;
     }

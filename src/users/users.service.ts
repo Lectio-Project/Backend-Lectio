@@ -45,11 +45,11 @@ export class UsersService {
     const [emailExists, userNameExists] = await Promise.all(queries);
 
     if (emailExists) {
-      throw new BadRequestException('Email already exists');
+      throw new BadRequestException('E-mail já existe');
     }
 
     if (createUserDto.userName && userNameExists) {
-      throw new BadRequestException('Username already exists');
+      throw new BadRequestException('Username já existe');
     }
 
     if (image) {
@@ -91,7 +91,7 @@ export class UsersService {
     const user = await this.getByEmail(loginDto.email);
 
     if (!user) {
-      throw new NotFoundException('User credentials do not match');
+      throw new NotFoundException('As credencias do usuário são inválidas');
     }
 
     const passwordIsMatch = await bcryptjs.compare(
@@ -100,7 +100,9 @@ export class UsersService {
     );
 
     if (!passwordIsMatch) {
-      throw new UnauthorizedException('User credentials do not match');
+      throw new UnauthorizedException(
+        'As credenciais do usuário são inválidas',
+      );
     }
 
     const token = this.jwt.generateToken(user);
@@ -146,7 +148,7 @@ export class UsersService {
       const emailAlreadyExists = await this.getByEmail(updateUserDto.email, id);
 
       if (emailAlreadyExists) {
-        throw new BadRequestException('Email already exists');
+        throw new BadRequestException('E-mail já existe');
       }
     }
 

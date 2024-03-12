@@ -1,13 +1,12 @@
-#rest client
-
-POST http://localhost:3333/users
+POST http://localhost:3333/users/sign-up
 Content-Type: application/json
 
 {
   "name": "Alfredo Amorim",
   "email": "alfredoamorim@email.com",
   "password": "@Alfredo123",
-  "confirmPassword": "@Alfredo123"
+  "confirmPassword": "@Alfredo123",
+  "checked": true
 }
 
 ###
@@ -24,7 +23,7 @@ GET http://localhost:3333/users
 
 
 ###
-PATCH https://backend-lectio-r3do.onrender.com/users/65e61e3a75f11b0038bff7dc
+PATCH http://localhost:3333/users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTYxZTNhNzVmMTFiMDAzOGJmZjdkYyIsIm5hbWUiOiJBbGZyZWRvIFNvdXNhIEFtb3JpbSIsImVtYWlsIjoiYWxmcmVkb2Ftb3JpbUBlbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQwOCR1MEZjam9KMTAuL2w1MjJZajNDNUFlVERRYWQ0ajRKdE50alo0eDZCODlOcWVUU0p0dUpCQyIsInVzZXJuYW1lIjoiQGFsZnJlZG8xNzA5NTc5ODM0OTA3IiwiYmlvIjpudWxsLCJpbWFnZVVybCI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wMy0wNFQxOToxNzoxNC45NDRaIiwidXBkYXRlZEF0IjoiMjAyNC0wMy0wNFQyMDozNToxNC44MjJaIiwiaWF0IjoxNzA5NTkyMzIxLCJleHAiOjE3MTAxOTcxMjF9.ACAi67VrZ5nj2_3EVWtKfiq2Efi_lvQ2WQn3sgEdKNQ
 
