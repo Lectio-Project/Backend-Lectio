@@ -181,5 +181,5 @@ Rota | Funcionalidade |
 ```text
 https://backend-lectio-r3do.onrender.com/
 ```
-
-&copy; MIT License 2024, feito com 🖤 por [Alisson Romão](https://github.com/alissonromaosantos), [Vanessa Ribeiro](https://github.com/vanessaribeiro03) e [Erick Staviasz](https://github.com/staviasz).
+----
+<p align="center">&copy; MIT License 2024, feito com 🖤 por <a href="https://github.com/alissonromaosantos" target="_blank">Alisson Romão</a>, <a href="https://github.com/vanessaribeiro03" target="_blank">Vanessa Ribeiro</a> e <a href="https://github.com/staviasz">Erick Staviasz</a>.</p>
