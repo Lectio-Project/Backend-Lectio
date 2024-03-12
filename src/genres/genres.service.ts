@@ -11,7 +11,7 @@ export class GenresService {
     const gender = await this.getByName(createGenreDto.gender);
 
     if (gender) {
-      throw new ConflictException('Gender already exists');
+      throw new ConflictException('Gênero já existe');
     }
 
     return await this.repository.gender.create({
@@ -41,7 +41,7 @@ export class GenresService {
     const gender = await this.getByName(updateGenreDto.gender, id);
 
     if (gender) {
-      throw new ConflictException('Gender already exists');
+      throw new ConflictException('Gênero já existe');
     }
 
     return await this.repository.gender.update({
