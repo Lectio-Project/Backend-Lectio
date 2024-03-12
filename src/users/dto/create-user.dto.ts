@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
@@ -74,5 +75,7 @@ export class CreateUserDto {
     message: 'O campo de aceitação dos termos de uso deve ser um boolean',
   })
   @IsNotEmpty({ message: 'A aceitação dos termos de uso é obrigatória' })
+  @Type(() => Boolean)
+
   checked: boolean;
 }

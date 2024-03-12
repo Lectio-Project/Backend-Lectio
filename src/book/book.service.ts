@@ -41,7 +41,7 @@ export class BookService {
               })),
             },
           },
-          select: this.selectFieldsResult({ type: 'inserts' }),
+          select: this.selectFieldsResult(),
         });
 
         return book;
@@ -68,7 +68,6 @@ export class BookService {
 
     if (newAdd.length > 0) {
       query.select = this.selectFieldsResult({
-        type: 'fields',
         fields: newAdd,
       });
     }
@@ -82,7 +81,6 @@ export class BookService {
       const newAdd = [...new Set([...add])];
 
       selectFields = this.selectFieldsResult({
-        type: 'fields',
         fields: newAdd,
       });
     }
@@ -141,7 +139,7 @@ export class BookService {
               })),
             },
           },
-          select: this.selectFieldsResult({ type: 'inserts' }),
+          select: this.selectFieldsResult(),
         });
 
         return book;
@@ -215,10 +213,7 @@ export class BookService {
     return book as Book;
   }
 
-  private selectFieldsResult(options?: {
-    type?: 'inserts' | 'fields';
-    fields?: Array<string>;
-  }) {
+  private selectFieldsResult(options?: { fields?: Array<string> }) {
     let selectFields: any = {
       id: true,
       name: true,
@@ -231,57 +226,27 @@ export class BookService {
       avgGrade: true,
       createdAt: true,
       updatedAt: true,
+      gender: true,
+      AuthorBook: {
+        select: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              imageUrl: true,
+            },
+          },
+        },
+      },
     };
 
     if (!options) {
       return selectFields;
     }
 
-    const { type, fields } = options;
+    const { fields } = options;
 
-    if (type === 'inserts') {
-      selectFields = {
-        ...selectFields,
-        gender: true,
-        AuthorBook: {
-          select: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                imageUrl: true,
-              },
-            },
-          },
-        },
-      };
-    }
-
-    if (type === 'fields' && fields.includes('author')) {
-      selectFields = {
-        ...selectFields,
-        AuthorBook: {
-          select: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                imageUrl: true,
-              },
-            },
-          },
-        },
-      };
-    }
-
-    if (type === 'fields' && fields.includes('gender')) {
-      selectFields = {
-        ...selectFields,
-        gender: true,
-      };
-    }
-
-    if (type === 'fields' && fields.includes('user')) {
+    if (fields.includes('user')) {
       selectFields = {
         ...selectFields,
         UserBook: {
@@ -299,7 +264,7 @@ export class BookService {
       };
     }
 
-    if (type === 'fields' && fields.includes('thought')) {
+    if (fields.includes('thought')) {
       selectFields = {
         ...selectFields,
         Thought: {
@@ -313,7 +278,7 @@ export class BookService {
       };
     }
 
-    if (type === 'fields' && fields.includes('comment')) {
+    if (fields.includes('comment')) {
       selectFields = {
         ...selectFields,
         Comment: {
@@ -327,9 +292,6 @@ export class BookService {
         },
       };
     }
-    // this.repository.book.findUniqueOrThrow({
-    //   select: { createdAt: true, updatedAt: true },
-    // });
 
     return selectFields;
   }
