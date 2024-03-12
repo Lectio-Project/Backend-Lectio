@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
@@ -60,5 +61,6 @@ export class CreateUserDto {
   @ApiProperty()
   @IsBoolean()
   @IsNotEmpty()
+  @Type(() => Boolean)
   checked: boolean;
 }

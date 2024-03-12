@@ -11,7 +11,13 @@ export class IsCompletelyNameContraint {
       return false;
     }
     const splitName = name.split(' ');
-    if (splitName.length < 2 || splitName.some(value => value.length < 3)) {
+
+    if (splitName.length < 2) {
+      return false;
+    }
+
+    const filterNoAbreviations = splitName.filter(value => value.length >= 3);
+    if (filterNoAbreviations.length < 2) {
       return false;
     }
     return true;
