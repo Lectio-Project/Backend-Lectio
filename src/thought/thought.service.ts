@@ -11,7 +11,7 @@ export class ThoughtService {
     const book = await this.getBookById(createThoughtDto.bookId);
 
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException('Livro não encontrado');
     }
 
     return await this.repository.thought.create({
@@ -36,7 +36,7 @@ export class ThoughtService {
     const book = await this.getBookById(updateThoughtDto.bookId);
 
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException('Livro não encontrado');
     }
 
     return await this.repository.thought.update({

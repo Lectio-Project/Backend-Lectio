@@ -4,8 +4,10 @@ import { IsNotDigitAndSpecialChar } from 'src/utils/validators/IsNotDigitAndSpec
 
 export class CreateGenreDto {
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  @IsNotDigitAndSpecialChar()
+  @IsString({ message: 'O campo gênero deve ser uma string' })
+  @IsNotEmpty({ message: 'O campo gênero é obrigatório' })
+  @IsNotDigitAndSpecialChar({
+    message: 'O campo gênero não deve ter dígitos ou caracteres especiais',
+  })
   gender: string;
 }

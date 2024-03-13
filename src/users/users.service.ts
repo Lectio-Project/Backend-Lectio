@@ -6,6 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcryptjs from 'bcryptjs';
+import * as dotenv from 'dotenv';
 import { AuthService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import deleteFile from 'src/utils/bucketIntegration/delete';
@@ -14,6 +15,7 @@ import generateUsername from 'src/utils/formats/createUsername';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+dotenv.config();
 
 @Injectable()
 export class UsersService {
@@ -32,6 +34,9 @@ export class UsersService {
     updatedAt: true,
   };
   async create(image: Express.Multer.File, createUserDto: CreateUserDto) {
+    if (!createUserDto.checked) {
+      throw new BadRequestException('Os termos de uso devem ser aceitos');
+    }
     const queries = [
       this.getByEmail(createUserDto.email),
       this.getByUsername(createUserDto.userName),
@@ -40,11 +45,11 @@ export class UsersService {
     const [emailExists, userNameExists] = await Promise.all(queries);
 
     if (emailExists) {
-      throw new BadRequestException('Email already exists');
+      throw new BadRequestException('E-mail já existe');
     }
 
     if (createUserDto.userName && userNameExists) {
-      throw new BadRequestException('Username already exists');
+      throw new BadRequestException('Username já existe');
     }
 
     if (image) {
@@ -69,6 +74,7 @@ export class UsersService {
         password: passwordHashed,
         username: userName,
         imageUrl: imageDto,
+        termsOfUse: checked,
       },
       select: this.selectFields,
     });
@@ -85,7 +91,7 @@ export class UsersService {
     const user = await this.getByEmail(loginDto.email);
 
     if (!user) {
-      throw new NotFoundException('User credentials do not match');
+      throw new NotFoundException('As credencias do usuário são inválidas');
     }
 
     const passwordIsMatch = await bcryptjs.compare(
@@ -94,7 +100,9 @@ export class UsersService {
     );
 
     if (!passwordIsMatch) {
-      throw new UnauthorizedException('User credentials do not match');
+      throw new UnauthorizedException(
+        'As credenciais do usuário são inválidas',
+      );
     }
 
     const token = this.jwt.generateToken(user);
@@ -132,11 +140,15 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
     image: Express.Multer.File,
   ) {
+    if (!updateUserDto.checked) {
+      throw new BadRequestException('Os termos de uso devem ser aceitos');
+    }
+
     if (updateUserDto.email) {
       const emailAlreadyExists = await this.getByEmail(updateUserDto.email, id);
 
       if (emailAlreadyExists) {
-        throw new BadRequestException('Email already exists');
+        throw new BadRequestException('E-mail já existe');
       }
     }
 
@@ -156,7 +168,7 @@ export class UsersService {
     } = updateUserDto;
     const updateUser = await this.repository.user.update({
       where: { id },
-      data: { ...rest, imageUrl: imageDto },
+      data: { ...rest, imageUrl: imageDto, termsOfUse: checked },
       select: this.selectFields,
     });
 
@@ -164,11 +176,20 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    const { imageUrl } = await this.repository.user.delete({
-      where: { id },
-      select: { imageUrl: true },
-    });
-    deleteFile(imageUrl, 'profiles');
+    const user = await this.repository.$transaction(
+      async (txtPrisma: PrismaService) => {
+        await txtPrisma.comment.deleteMany({
+          where: { userId: id },
+        });
+        return await txtPrisma.user.delete({
+          where: { id },
+        });
+      },
+    );
+
+    if (user.imageUrl && user.imageUrl.includes(process.env.BUCKET_URL)) {
+      deleteFile(user.imageUrl, 'profiles');
+    }
 
     return;
   }

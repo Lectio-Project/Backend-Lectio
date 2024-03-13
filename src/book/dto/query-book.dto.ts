@@ -6,10 +6,10 @@ import { IsIncludedInOptions } from 'src/utils/validators/IsIncludedInOptions';
 export class QueryBookDto {
   @ApiProperty({
     required: false,
-    enum: ['author', 'gender', 'user', 'thought', 'comment'],
+    enum: ['user', 'thought', 'comment'],
   })
   @IsOptional()
-  @IsIncludedInOptions(['author', 'gender', 'user', 'thought', 'comment'])
+  @IsIncludedInOptions(['user', 'thought', 'comment'])
   add?: string | Array<string>;
 
   @ApiProperty({
@@ -17,7 +17,10 @@ export class QueryBookDto {
     example: 'filter by author id or [authors id]',
   })
   @IsOptional()
-  @IsArrayOfIdStringsOrIdString()
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do autor deve conter uma string ou um array de strings no formato ObjectId',
+  })
   authorId?: string | Array<string>;
 
   @ApiProperty({
@@ -25,7 +28,10 @@ export class QueryBookDto {
     example: 'filter by gender id or [genres id]',
   })
   @IsOptional()
-  @IsArrayOfIdStringsOrIdString()
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do gênero deve conter uma string ou um array de strings no formato ObjectId',
+  })
   genderId?: string | Array<string>;
 
   @ApiProperty({
@@ -33,7 +39,10 @@ export class QueryBookDto {
     example: 'filter by user id or [users id]',
   })
   @IsOptional()
-  @IsArrayOfIdStringsOrIdString()
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do usuário deve conter uma string ou um array de strings no formato ObjectId',
+  })
   userId?: string | Array<string>;
 
   @ApiProperty({
@@ -41,7 +50,10 @@ export class QueryBookDto {
     example: 'filter by comment id or [comments id]',
   })
   @IsOptional()
-  @IsArrayOfIdStringsOrIdString()
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do comentário deve conter uma string ou um array de strings no formato ObjectId',
+  })
   commentId?: string | Array<string>;
 
   @ApiProperty({
@@ -49,6 +61,9 @@ export class QueryBookDto {
     example: 'filter by thought id or [thoughts id]',
   })
   @IsOptional()
-  @IsArrayOfIdStringsOrIdString()
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do pensamento deve conter uma string ou um array de strings no formato ObjectId',
+  })
   thoughtId?: string | Array<string>;
 }
