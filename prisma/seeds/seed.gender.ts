@@ -18,7 +18,7 @@ async function genreRegistration(prisma: PrismaClient): Promise<void> {
 
   for (const gender of genres) {
     await prisma.gender.upsert({
-      where: { gender: gender.name },
+      where: { id: gender.id },
       update: {},
       create: { id: gender.id, gender: gender.name },
     });
