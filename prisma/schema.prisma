@@ -58,7 +58,7 @@ model UserGender {
 
 model Gender {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  gender       String
+  gender       String         @unique
   UserGenres   UserGender[]
   GenderAuthor GenderAuthor[]
   Book         Book[]
