@@ -76,8 +76,11 @@ export class AuthorService {
       ...query,
       select: selectFields,
     };
-
-    return await this.repository.author.findMany(query);
+    try {
+      return await this.repository.author.findMany(query);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async findOne(id: string, add?: Array<string>) {
@@ -237,11 +240,7 @@ export class AuthorService {
     if (type === 'inserts' || fields.includes('gender')) {
       selectFields = {
         ...selectFields,
-        Genders: {
-          select: {
-            gender: { select: { id: true, gender: true } },
-          },
-        },
+        Genders: { select: { gender: true } },
       };
     }
 
@@ -286,6 +285,10 @@ export class AuthorService {
         },
       };
     }
+
+    this.repository.author.findMany({
+      select: { Genders: { select: { gender: true } } },
+    });
 
     return selectFields;
   }

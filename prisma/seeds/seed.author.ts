@@ -243,9 +243,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       create: {
         ...author,
         Genders: {
-          create: (author.Genders as string[]).map(id => ({
-            gender: { connect: { id } },
-          })),
+          create: (author.Genders as string[]).map(id => ({ genderId: id })),
         },
       },
     });
