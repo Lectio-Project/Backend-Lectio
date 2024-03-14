@@ -23,7 +23,7 @@ export class AuthorService {
     const [imageUrl, genresDb] = await Promise.all(queries);
 
     if (genresDb.length !== genresId.length) {
-      throw new NotFoundException('Genre not found');
+      throw new NotFoundException('Gênero não encontrado');
     }
 
     const response = await this.repository.$transaction(
@@ -135,10 +135,10 @@ export class AuthorService {
     });
 
     if (genderDB && genresId && genderDB.length !== genresId.length) {
-      throw new NotFoundException('Gender not found');
+      throw new NotFoundException('Gênero não encontrado');
     }
     if (userDB && usersId && userDB.length !== usersId.length) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuário não encontrado');
     }
 
     const response = await this.repository.$transaction(

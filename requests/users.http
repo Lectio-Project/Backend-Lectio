@@ -1,13 +1,12 @@
-#rest client
-
-POST http://localhost:3333/users
+POST http://localhost:3333/users/sign-up
 Content-Type: application/json
 
 {
   "name": "Alfredo Amorim",
   "email": "alfredoamorim@email.com",
   "password": "@Alfredo123",
-  "confirmPassword": "@Alfredo123"
+  "confirmPassword": "@Alfredo123",
+  "checked": true
 }
 
 ###

@@ -11,7 +11,10 @@ export class UpdateAuthorDto extends PartialType(CreateAuthorDto) {
     required: false,
   })
   @IsOptional()
-  @IsArrayOfIdStringsOrIdString()
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do usuário deve conter uma string ou um array de strings no formato ObjectId',
+  })
   usersId?: string | Array<string>;
 
   @ApiProperty({
@@ -30,7 +33,7 @@ export class UpdateAuthorDto extends PartialType(CreateAuthorDto) {
 
   @ApiProperty({
     type: () => [String],
-    example: ['id do genero'],
+    example: ['id do gênero'],
     required: false,
   })
   genresId?: string | Array<string>;

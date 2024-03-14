@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { AdminGuard } from 'src/guards/authAdmin/authAdmin.guard';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -23,12 +23,12 @@ import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('books')
-@ApiTags('books')
-@ApiSecurity('JWT-auth')
-@UseGuards(AuthGuard)
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
+  @ApiTags('Admin/Books')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AdminGuard)
   @UseInterceptors(FileInterceptor('image'))
   @Post()
   create(
@@ -53,6 +53,7 @@ export class BookController {
     return this.bookService.create(createBookDto, image);
   }
 
+  @ApiTags('Books')
   @Get()
   findAll(@Query() query: QueryBookDto) {
     const { add, ...rest } = query;
@@ -60,6 +61,7 @@ export class BookController {
     return this.bookService.findAll(addArray, rest);
   }
 
+  @ApiTags('Books')
   @Get(':id')
   findOne(@Query() query: QueryBookDto, @Param('id') id: string) {
     const { add } = query;
@@ -67,6 +69,9 @@ export class BookController {
     return this.bookService.findOne(id, addArray);
   }
 
+  @ApiTags('Admin/Books')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AdminGuard)
   @UseInterceptors(FileInterceptor('image'))
   @Patch(':id')
   update(
@@ -91,6 +96,9 @@ export class BookController {
     return this.bookService.update(id, updateBookDto, image);
   }
 
+  @ApiTags('Admin/Books')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AdminGuard)
   @HttpCode(204)
   @Delete(':id')
   remove(@Param('id') id: string) {
