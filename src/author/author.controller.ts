@@ -15,7 +15,8 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { AdminGuard } from 'src/guards/authAdmin/authAdmin.guard';
+import { AuthGuard } from 'src/guards/authUser/authUser.guard';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -23,12 +24,12 @@ import { QueryAuthorDto } from './dto/query-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 
 @Controller('authors')
-@ApiTags('authors')
-@ApiSecurity('JWT-auth')
-@UseGuards(AuthGuard)
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
+  @ApiTags('Admin/Authors')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AdminGuard)
   @UseInterceptors(FileInterceptor('image'))
   @Post()
   create(
@@ -52,6 +53,9 @@ export class AuthorController {
     return this.authorService.create(createAuthorDto, image);
   }
 
+  @ApiTags('Authors')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AuthGuard)
   @Get()
   findAll(@Query() query: QueryAuthorDto) {
     const { add, genresId } = query;
@@ -62,6 +66,9 @@ export class AuthorController {
     return this.authorService.findAll(genresArray, addArray);
   }
 
+  @ApiTags('Authors')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string, @Query() query: QueryAuthorDto) {
     const { add } = query;
@@ -69,6 +76,9 @@ export class AuthorController {
     return this.authorService.findOne(id, addArray);
   }
 
+  @ApiTags('Admin/Authors')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AdminGuard)
   @UseInterceptors(FileInterceptor('image'))
   @Patch(':id')
   update(
@@ -94,6 +104,9 @@ export class AuthorController {
     return this.authorService.update(id, updateAuthorDto, image);
   }
 
+  @ApiTags('Admin/Authors')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AdminGuard)
   @HttpCode(204)
   @Delete(':id')
   remove(@Param('id') id: string) {

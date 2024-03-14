@@ -7,6 +7,7 @@ import { GenresModule } from './genres/genres.module';
 import { BookModule } from './book/book.module';
 import { CommentsModule } from './comments/comments.module';
 import { ThoughtModule } from './thought/thought.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ThoughtModule } from './thought/thought.module';
     BookModule,
     CommentsModule,
     ThoughtModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],
