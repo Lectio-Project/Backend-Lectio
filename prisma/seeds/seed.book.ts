@@ -275,9 +275,7 @@ async function bookRegistration(prisma: PrismaClient): Promise<void> {
       create: {
         ...book,
         AuthorBook: {
-          create: (book.AuthorBook as string[]).map(id => ({
-            author: { connect: { id } },
-          })),
+          create: (book.AuthorBook as string[]).map(id => ({ authorId: id })),
         },
       },
     });

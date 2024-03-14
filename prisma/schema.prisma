@@ -122,6 +122,8 @@ model AuthorBook {
   authorId String @db.ObjectId
   book     Book   @relation(fields: [bookId], references: [id])
   author   Author @relation(fields: [authorId], references: [id])
+
+  @@map("author_book")
 }
 
 model Book {
