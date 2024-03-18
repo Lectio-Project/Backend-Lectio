@@ -68,7 +68,7 @@ export class CreateUserDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  image?: string;
+  imageUrl?: string;
 
   @ApiProperty()
   @IsBoolean({
@@ -76,6 +76,5 @@ export class CreateUserDto {
   })
   @IsNotEmpty({ message: 'A aceitação dos termos de uso é obrigatória' })
   @Type(() => Boolean)
-
-  checked: boolean;
+  termsOfUse: boolean;
 }
