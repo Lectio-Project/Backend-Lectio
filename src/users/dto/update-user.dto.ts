@@ -20,4 +20,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @ApiProperty({ required: false })
   userName?: string;
+
+  @ApiProperty({ required: false })
+  imageUrl?: string;
 }
