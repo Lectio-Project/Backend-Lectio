@@ -48,7 +48,7 @@ export class UsersController {
     image?: Express.Multer.File,
   ) {
     if (createUserDto.password !== createUserDto.confirmPassword) {
-      throw new BadRequestException('Passwords do not match');
+      throw new BadRequestException('As senhas devem ser iguais');
     }
     return this.usersService.create(image, createUserDto);
   }
@@ -105,7 +105,7 @@ export class UsersController {
     image?: Express.Multer.File,
   ) {
     if (updateUserDto.password !== updateUserDto.confirmPassword) {
-      throw new BadRequestException('Passwords do not match');
+      throw new BadRequestException('As senhas devem ser iguais');
     }
 
     return this.usersService.update(req.user.id, updateUserDto, image);

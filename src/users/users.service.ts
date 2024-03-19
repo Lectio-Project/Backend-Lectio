@@ -34,7 +34,7 @@ export class UsersService {
     updatedAt: true,
   };
   async create(image: Express.Multer.File, createUserDto: CreateUserDto) {
-    if (!createUserDto.checked) {
+    if (!createUserDto.termsOfUse) {
       throw new BadRequestException('Os termos de uso devem ser aceitos');
     }
     const queries = [
@@ -53,28 +53,20 @@ export class UsersService {
     }
 
     if (image) {
-      createUserDto.image = await upload(image, 'profiles');
+      createUserDto.imageUrl = await upload(image, 'profiles');
     }
 
     createUserDto.userName =
       createUserDto.userName || generateUsername(createUserDto.name);
 
     const passwordHashed = await bcryptjs.hash(createUserDto.password, 8);
-    const {
-      checked,
-      confirmPassword,
-      image: imageDto,
-      userName,
-      ...rest
-    } = createUserDto;
+    const { confirmPassword, userName, ...rest } = createUserDto;
 
     const user = await this.repository.user.create({
       data: {
         ...rest,
         password: passwordHashed,
         username: userName,
-        imageUrl: imageDto,
-        termsOfUse: checked,
       },
       select: this.selectFields,
     });
@@ -140,10 +132,6 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
     image: Express.Multer.File,
   ) {
-    if (!updateUserDto.checked) {
-      throw new BadRequestException('Os termos de uso devem ser aceitos');
-    }
-
     if (updateUserDto.email) {
       const emailAlreadyExists = await this.getByEmail(updateUserDto.email, id);
 
@@ -157,18 +145,18 @@ export class UsersService {
     }
 
     if (image) {
-      updateUserDto.image = await upload(image, 'profiles');
+      updateUserDto.imageUrl = await upload(image, 'profiles');
     }
 
     const {
-      image: imageDto,
-      checked,
+      // imageUrl: imageDto,
+      termsOfUse,
       confirmPassword,
       ...rest
     } = updateUserDto;
     const updateUser = await this.repository.user.update({
       where: { id },
-      data: { ...rest, imageUrl: imageDto, termsOfUse: checked },
+      data: { ...rest },
       select: this.selectFields,
     });
 
