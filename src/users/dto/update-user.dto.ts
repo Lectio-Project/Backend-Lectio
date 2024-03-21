@@ -23,4 +23,25 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @ApiProperty({ required: false })
   imageUrl?: string;
+
+  @ApiProperty({
+    type: () => [String],
+    example: ['id do(s) gênero'],
+    required: false,
+  })
+  genresId?: string | Array<string>;
+
+  @ApiProperty({
+    type: () => [String],
+    example: ['id do(s) autor'],
+    required: false,
+  })
+  authorsId?: string | Array<string>;
+
+  @ApiProperty({
+    type: () => [String],
+    example: ['id do(s) livro'],
+    required: false,
+  })
+  booksId?: string | Array<string>;
 }
