@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsArrayOfIdStringsOrIdString } from 'src/utils/validators/IsArrayOfIdStringsOrIdString';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -29,6 +30,10 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     example: ['id do(s) gênero'],
     required: false,
   })
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do gênero deve conter uma string ou um array de strings no formato ObjectId',
+  })
   genresId?: string | Array<string>;
 
   @ApiProperty({
@@ -36,12 +41,20 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     example: ['id do(s) autor'],
     required: false,
   })
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do autor deve conter uma string ou um array de strings no formato ObjectId',
+  })
   authorsId?: string | Array<string>;
 
   @ApiProperty({
     type: () => [String],
     example: ['id do(s) livro'],
     required: false,
+  })
+  @IsArrayOfIdStringsOrIdString({
+    message:
+      'O campo id do livro deve conter uma string ou um array de strings no formato ObjectId',
   })
   booksId?: string | Array<string>;
 }
