@@ -32,6 +32,9 @@ export class UsersService {
     imageUrl: true,
     createdAt: true,
     updatedAt: true,
+    UserBook: { select: { book: true } },
+    UserGenres: { select: { gender: true } },
+    UserAuthor: { select: { author: true } },
   };
   async create(image: Express.Multer.File, createUserDto: CreateUserDto) {
     if (!createUserDto.termsOfUse) {
@@ -123,7 +126,9 @@ export class UsersService {
       where: {
         id,
       },
-      select: this.selectFields,
+      select: {
+        ...this.selectFields,
+      },
     });
   }
 
@@ -149,14 +154,26 @@ export class UsersService {
     }
 
     const {
-      // imageUrl: imageDto,
       termsOfUse,
       confirmPassword,
+      authorsId,
+      booksId,
+      genresId,
       ...rest
     } = updateUserDto;
+
+    const updates = await this.validationIdsRelatedsDocuments(
+      authorsId,
+      booksId,
+      genresId,
+    );
+
     const updateUser = await this.repository.user.update({
       where: { id },
-      data: { ...rest },
+      data: {
+        ...rest,
+        ...updates,
+      },
       select: this.selectFields,
     });
 
@@ -197,5 +214,56 @@ export class UsersService {
         username: userName,
       },
     });
+  }
+
+  private async validationIdsRelatedsDocuments(
+    authorsId?: string | Array<string>,
+    booksId?: string | Array<string>,
+    genresId?: string | Array<string>,
+  ) {
+    const queries = [];
+    const updates = {};
+
+    if (authorsId) {
+      for (const id of authorsId) {
+        queries.push(
+          this.repository.author.findUniqueOrThrow({ where: { id } }),
+        );
+      }
+      updates['UserAuthor'] = {
+        createMany: {
+          data: (authorsId as Array<string>)?.map(authorId => ({
+            authorId,
+          })),
+        },
+      };
+    }
+    if (booksId) {
+      for (const id of booksId) {
+        queries.push(this.repository.book.findUniqueOrThrow({ where: { id } }));
+      }
+      updates['UserBook'] = {
+        createMany: {
+          data: (booksId as Array<string>)?.map(bookId => ({ bookId })),
+        },
+      };
+    }
+    if (genresId) {
+      for (const id of genresId) {
+        queries.push(
+          this.repository.gender.findUniqueOrThrow({ where: { id } }),
+        );
+      }
+      updates['UserGenres'] = {
+        createMany: {
+          data: (genresId as Array<string>)?.map(genderId => ({
+            genderId,
+          })),
+        },
+      };
+    }
+
+    await Promise.all(queries);
+    return updates;
   }
 }

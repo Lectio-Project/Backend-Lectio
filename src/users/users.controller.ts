@@ -108,6 +108,19 @@ export class UsersController {
       throw new BadRequestException('As senhas devem ser iguais');
     }
 
+    updateUserDto.authorsId =
+      typeof updateUserDto.authorsId === 'string'
+        ? [updateUserDto.authorsId]
+        : updateUserDto.authorsId;
+    updateUserDto.booksId =
+      typeof updateUserDto.booksId === 'string'
+        ? [updateUserDto.booksId]
+        : updateUserDto.booksId;
+    updateUserDto.genresId =
+      typeof updateUserDto.genresId === 'string'
+        ? [updateUserDto.genresId]
+        : updateUserDto.genresId;
+
     return this.usersService.update(req.user.id, updateUserDto, image);
   }
 
