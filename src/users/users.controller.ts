@@ -107,11 +107,12 @@ export class UsersController {
     if (updateUserDto.password !== updateUserDto.confirmPassword) {
       throw new BadRequestException('As senhas devem ser iguais');
     }
+    // const { authorsId } = updateUserDto;
 
-    updateUserDto.authorsId =
-      typeof updateUserDto.authorsId === 'string'
-        ? [updateUserDto.authorsId]
-        : updateUserDto.authorsId;
+    // updateUserDto.authorsId =
+    //   authorsId && typeof authorsId === 'string'
+    //     ? [updateUserDto.authorsId]
+    //     : updateUserDto.authorsId;
     updateUserDto.booksId =
       typeof updateUserDto.booksId === 'string'
         ? [updateUserDto.booksId]
