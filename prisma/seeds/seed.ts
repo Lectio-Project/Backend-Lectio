@@ -3,6 +3,7 @@ import authorRegistration from './seed.author';
 import bookRegistration from './seed.book';
 import commentsRegistration from './seed.comments';
 import genreRegistration from './seed.gender';
+import literaryAwardsRegistration from './seed.literaryAwards';
 import thoughtRegistration from './seed.thougt';
 import userRegistration from './seed.user';
 
@@ -16,6 +17,7 @@ async function executeSeeds(prisma: PrismaClient) {
     await userRegistration(prisma).then();
     await commentsRegistration(prisma).then();
     await thoughtRegistration(prisma).then();
+    await literaryAwardsRegistration(prisma).then();
   } catch (error) {
     //
   }
