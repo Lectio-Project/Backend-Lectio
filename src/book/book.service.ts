@@ -288,6 +288,7 @@ export class BookService {
       createdAt: true,
       updatedAt: true,
       gender: true,
+      totalPages: true,
       AuthorBook: {
         select: {
           author: {
