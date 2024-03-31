@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsNumberString, IsOptional } from 'class-validator';
 import { IsArrayOfIdStringsOrIdString } from 'src/utils/validators/IsArrayOfIdStringsOrIdString';
 import { CreateAuthorDto } from './create-author.dto';
 
@@ -37,4 +37,17 @@ export class UpdateAuthorDto extends PartialType(CreateAuthorDto) {
     required: false,
   })
   genresId?: string | Array<string>;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsNumberString(
+    {},
+    {
+      message:
+        'O campo ano de publicação do livro deve ser uma string numérica',
+    },
+  )
+  @IsOptional()
+  grade?: string;
 }
