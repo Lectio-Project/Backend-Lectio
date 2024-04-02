@@ -99,4 +99,10 @@ export class SearchService {
 
     return response;
   }
+
+  async findAllGenres(genresId: Array<string>) {
+    return await this.prisma.book.findMany({
+      where: { genderId: { in: genresId } },
+    });
+  }
 }
