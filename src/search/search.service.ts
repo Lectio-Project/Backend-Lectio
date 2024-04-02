@@ -5,6 +5,42 @@ import { QuerySearchCategoriesDto } from './dto/query-search-categories.dto';
 @Injectable()
 export class SearchService {
   constructor(private readonly prisma: PrismaService) {}
+
+  selectFields = {
+    select: {
+      id: true,
+      name: true,
+      imageUrl: true,
+      publishYear: true,
+      publishingCompany: true,
+      totalGrade: true,
+      counterGrade: true,
+      avgGrade: true,
+      synopsis: true,
+      gender: { select: { gender: true } },
+      isbn13: true,
+      isMovie: true,
+      totalPages: true,
+      LiteraryAwards: { select: { id: true, name: true, year: true } },
+      AuthorBook: {
+        select: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              carrerDescription: true,
+              imageUrl: true,
+              sexGender: true,
+              birthplace: true,
+              avgGrade: true,
+              counterGrade: true,
+              totalGrade: true,
+            },
+          },
+        },
+      },
+    },
+  };
   async findAllCategories(queries: QuerySearchCategoriesDto) {
     const {
       isMovie,
@@ -18,7 +54,10 @@ export class SearchService {
 
     if (isMovie) {
       executeQueries.push(
-        this.prisma.book.findMany({ where: { isMovie: true } }),
+        this.prisma.book.findMany({
+          where: { isMovie: true },
+          ...this.selectFields,
+        }),
       );
       response['isMovie'] = Object.keys(response).length;
     }
@@ -27,29 +66,8 @@ export class SearchService {
       executeQueries.push(
         this.prisma.literaryAwards.findMany({
           select: {
-            id: true,
-            name: true,
-            year: true,
             Book: {
-              select: {
-                id: true,
-                name: true,
-                gender: true,
-                imageUrl: true,
-                synopsis: true,
-                totalGrade: true,
-                counterGrade: true,
-                avgGrade: true,
-                publishYear: true,
-                publishingCompany: true,
-                AuthorBook: {
-                  select: {
-                    author: {
-                      select: { id: true, name: true, imageUrl: true },
-                    },
-                  },
-                },
-              },
+              ...this.selectFields,
             },
           },
         }),
@@ -61,6 +79,9 @@ export class SearchService {
       executeQueries.push(
         this.prisma.author.findMany({
           where: { sexGender: sexGenderAuthor === 'male' ? 'male' : 'woman' },
+          select: {
+            AuthorBook: { select: { book: { ...this.selectFields } } },
+          },
         }),
       );
       response['sexGenderAuthor'] = Object.keys(response).length;
@@ -79,6 +100,7 @@ export class SearchService {
               lte: hoje,
             },
           },
+          ...this.selectFields,
         }),
       );
       response['weekPopulater'] = Object.keys(response).length;
@@ -86,7 +108,10 @@ export class SearchService {
 
     if (bestRated) {
       executeQueries.push(
-        this.prisma.book.findMany({ where: { avgGrade: { gte: 4.5 } } }),
+        this.prisma.book.findMany({
+          where: { avgGrade: { gte: 4.5 } },
+          ...this.selectFields,
+        }),
       );
       response['bestRated'] = Object.keys(response).length;
     }
@@ -103,6 +128,7 @@ export class SearchService {
   async findAllGenres(genresId: Array<string>) {
     return await this.prisma.book.findMany({
       where: { genderId: { in: genresId } },
+      ...this.selectFields,
     });
   }
   async findAll(query: string) {
@@ -121,39 +147,7 @@ export class SearchService {
           },
         ],
       },
-      select: {
-        id: true,
-        name: true,
-        imageUrl: true,
-        publishYear: true,
-        publishingCompany: true,
-        totalGrade: true,
-        counterGrade: true,
-        avgGrade: true,
-        synopsis: true,
-        gender: { select: { gender: true } },
-        isbn13: true,
-        isMovie: true,
-        totalPages: true,
-        LiteraryAwards: { select: { id: true, name: true, year: true } },
-        AuthorBook: {
-          select: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                carrerDescription: true,
-                imageUrl: true,
-                sexGender: true,
-                birthplace: true,
-                avgGrade: true,
-                counterGrade: true,
-                totalGrade: true,
-              },
-            },
-          },
-        },
-      },
+      ...this.selectFields,
     });
   }
 }
