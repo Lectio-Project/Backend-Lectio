@@ -97,6 +97,7 @@ model Author {
   totalGrade        Float?         @default(0)
   counterGrade      Int?           @default(0)
   avgGrade          Float?         @default(0)
+  sexGender         SexGender
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
   Genders           GenderAuthor[]
@@ -161,4 +162,9 @@ model Admin {
   updatedAt DateTime @updatedAt
 
   @@map("admin")
+}
+
+enum SexGender {
+  male
+  woman
 }

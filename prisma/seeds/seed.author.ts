@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, SexGender } from '@prisma/client';
 
 async function authorRegistration(prisma: PrismaClient): Promise<void> {
   const authors = [
@@ -12,6 +12,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 68,
       counterGrade: 15,
       avgGrade: 4.5,
+      sexGender: 'male',
       birthplace: 'Salvador, Bahia, Brasil',
       Genders: ['65f31ea9c60b72e59511c8d9'],
     },
@@ -26,6 +27,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 47,
       counterGrade: 10,
       avgGrade: 4.7,
+      sexGender: 'woman',
       Genders: ['65f31ea9c60b72e59511c8d9', '65f31ea9c60b72e59511c8da'],
     },
     {
@@ -40,6 +42,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 89,
       counterGrade: 22,
       avgGrade: 4,
+      sexGender: 'male',
       Genders: ['65f31ea9c60b72e59511c8d7'],
     },
     {
@@ -53,6 +56,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 52,
       counterGrade: 15,
       avgGrade: 3.5,
+      sexGender: 'woman',
       Genders: ['65f31ea9c60b72e59511c8d7'],
     },
     {
@@ -66,6 +70,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 58,
       counterGrade: 12,
       avgGrade: 4.8,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d4'],
     },
     {
@@ -79,6 +84,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 272,
       counterGrade: 58,
       avgGrade: 4.7,
+      sexGender: 'woman',
       Genders: ['65f31ea8c60b72e59511c8d4'],
     },
     {
@@ -92,6 +98,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 272,
       counterGrade: 25,
       avgGrade: 4.3,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d3'],
     },
     {
@@ -105,6 +112,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 184,
       counterGrade: 45,
       avgGrade: 4.1,
+      sexGender: 'woman',
       Genders: ['65f31ea8c60b72e59511c8d3'],
     },
     {
@@ -118,6 +126,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 327,
       counterGrade: 84,
       avgGrade: 3.9,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d1'],
     },
     {
@@ -131,6 +140,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 405,
       counterGrade: 92,
       avgGrade: 4.4,
+      sexGender: 'woman',
       Genders: ['65f31ea8c60b72e59511c8d1'],
     },
     {
@@ -144,6 +154,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 307,
       counterGrade: 76,
       avgGrade: 4.0,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d2'],
     },
     {
@@ -158,6 +169,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 412,
       counterGrade: 90,
       avgGrade: 4.5,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d2'],
     },
     {
@@ -171,6 +183,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 845,
       counterGrade: 185,
       avgGrade: 4.5,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d5'],
     },
     {
@@ -184,6 +197,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 123,
       counterGrade: 25,
       avgGrade: 4.9,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d5'],
     },
     {
@@ -197,6 +211,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 430,
       counterGrade: 97,
       avgGrade: 4.4,
+      sexGender: 'male',
       Genders: ['65f31ea9c60b72e59511c8d8'],
     },
     {
@@ -210,6 +225,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 68,
       counterGrade: 15,
       avgGrade: 4.5,
+      sexGender: 'male',
       Genders: ['65f31ea9c60b72e59511c8d8'],
     },
     {
@@ -223,6 +239,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 47,
       counterGrade: 10,
       avgGrade: 4.7,
+      sexGender: 'male',
       Genders: ['65f31ea9c60b72e59511c8da'],
     },
     {
@@ -236,6 +253,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 89,
       counterGrade: 22,
       avgGrade: 4,
+      sexGender: 'male',
       Genders: ['65f31ea9c60b72e59511c8db'],
     },
     {
@@ -249,6 +267,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 58,
       counterGrade: 12,
       avgGrade: 4.8,
+      sexGender: 'male',
       Genders: ['65f31ea9c60b72e59511c8db'],
     },
     {
@@ -262,6 +281,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 272,
       counterGrade: 58,
       avgGrade: 4.7,
+      sexGender: 'male',
       Genders: ['65f31ea9c60b72e59511c8dc'],
     },
     {
@@ -275,6 +295,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 430,
       counterGrade: 97,
       avgGrade: 4.4,
+      sexGender: 'male',
       Genders: ['65f31ea9c60b72e59511c8dc'],
     },
     {
@@ -288,6 +309,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 272,
       counterGrade: 58,
       avgGrade: 4.7,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d6'],
     },
     {
@@ -301,6 +323,7 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       totalGrade: 845,
       counterGrade: 185,
       avgGrade: 4.5,
+      sexGender: 'male',
       Genders: ['65f31ea8c60b72e59511c8d6'],
     },
   ];
@@ -311,6 +334,8 @@ async function authorRegistration(prisma: PrismaClient): Promise<void> {
       update: {},
       create: {
         ...author,
+        sexGender:
+          author.sexGender === 'male' ? SexGender.male : SexGender.woman,
         Genders: {
           create: (author.Genders as string[]).map(id => ({ genderId: id })),
         },
