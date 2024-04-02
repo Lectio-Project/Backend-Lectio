@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import avgGradeCalc from 'src/utils/avgGrade';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { calculatePagination } from 'src/utils/pagination/pagination-function';
 
 @Injectable()
 export class CommentsService {
@@ -92,7 +92,8 @@ export class CommentsService {
 
       return [pagination, ...rows];
     }
-    return await this.repository.comment.findMany();
+
+    return await this.repository.comment.findMany(this.selectFields);
   }
 
   async findOne(id: string) {

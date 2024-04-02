@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -53,9 +54,8 @@ export class CreateAuthorDto {
   genresId: string | Array<string>;
 
   @ApiProperty()
-  @IsString({
-    message:
-      'O campo local de nascimento deve ser uma string ex: male ou women',
+  @IsIn(['male', 'woman'], {
+    message: 'O campo sexGender deve ser uma string ex: male ou women',
   })
   @IsNotEmpty({ message: 'O campo local de nascimento é obrigatório' })
   sexGender: 'male' | 'women';
