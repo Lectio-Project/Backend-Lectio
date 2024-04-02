@@ -20,7 +20,13 @@ export class CommentsService {
       createdAt: true,
       updatedAt: true,
       book: {
-        select: { id: true, name: true, avgGrade: true, counterGrade: true },
+        select: {
+          id: true,
+          name: true,
+          avgGrade: true,
+          counterGrade: true,
+          totalGrade: true,
+        },
       },
       user: {
         select: { id: true, name: true, imageUrl: true, username: true },
@@ -44,26 +50,29 @@ export class CommentsService {
 
     const { totalGrade, counterGrade, avgGrade } = bookGrades;
 
-    await this.repository.book.update({
-      where: {
-        id: bookId,
+    return await this.repository.$transaction(
+      async (txtPrisma: PrismaService) => {
+        await txtPrisma.book.update({
+          where: {
+            id: bookId,
+          },
+          data: {
+            totalGrade,
+            counterGrade,
+            avgGrade,
+          },
+        });
+        return await txtPrisma.comment.create({
+          data: {
+            text,
+            bookGrade,
+            userId,
+            bookId,
+          },
+          ...this.selectFields,
+        });
       },
-      data: {
-        totalGrade,
-        counterGrade,
-        avgGrade,
-      },
-    });
-
-    return await this.repository.comment.create({
-      data: {
-        text,
-        bookGrade,
-        userId,
-        bookId,
-      },
-      ...this.selectFields,
-    });
+    );
   }
 
   async findAll() {
@@ -80,13 +89,7 @@ export class CommentsService {
   }
 
   async update(userId: string, id: string, updateCommentDto: UpdateCommentDto) {
-    const { text, bookGrade, bookId } = updateCommentDto;
-
-    const book = await this.getBookById(bookId);
-
-    if (!book) {
-      throw new NotFoundException('O livro não existe');
-    }
+    const { text, bookGrade } = updateCommentDto;
 
     const commentBelongsToTheUserLogged = await this.getCommentByUser(
       id,
@@ -99,48 +102,56 @@ export class CommentsService {
       );
     }
 
-    const bookGrades = avgGradeCalc(
-      bookGrade,
-      book.totalGrade - commentBelongsToTheUserLogged.bookGrade,
-      book.counterGrade - 1,
-    );
+    const newData = {
+      newBookGrade: {},
+      newCommentData: {},
+    };
 
-    const { totalGrade, counterGrade, avgGrade } = bookGrades;
+    const { bookGrade: oldBookGrade, book } = commentBelongsToTheUserLogged;
 
-    await this.repository.book.update({
-      where: {
-        id: bookId,
-      },
-      data: {
-        totalGrade,
-        counterGrade,
-        avgGrade,
-      },
-    });
-
-    return await this.repository.comment.update({
-      where: {
-        id,
-      },
-      data: {
-        text,
+    if (bookGrade) {
+      const newBookGrade = avgGradeCalc(
         bookGrade,
-        userId,
-        bookId,
+        book.totalGrade - oldBookGrade,
+        book.counterGrade - 1,
+      );
+      newData.newBookGrade = newBookGrade;
+      newData.newCommentData = {
+        bookGrade,
+      };
+    }
+
+    if (text) {
+      newData.newCommentData = {
+        text,
+      };
+    }
+
+    return await this.repository.$transaction(
+      async (txtPrisma: PrismaService) => {
+        await txtPrisma.book.update({
+          where: {
+            id: book.id,
+          },
+          data: {
+            ...newData.newBookGrade,
+          },
+        });
+
+        return await txtPrisma.comment.update({
+          where: {
+            id,
+          },
+          data: {
+            ...newData.newCommentData,
+          },
+          ...this.selectFields,
+        });
       },
-      ...this.selectFields,
-    });
+    );
   }
 
   async remove(id: string, userId: string) {
-    const comment = await this.findOne(id);
-
-    const book = await this.getBookById(comment.book.id);
-
-    if (!book) {
-      throw new NotFoundException('O livro não existe');
-    }
-    6;
     const commentBelongsToTheUserLogged = await this.getCommentByUser(
       id,
       userId,
@@ -152,30 +163,27 @@ export class CommentsService {
       );
     }
 
-    const bookGrades = avgGradeCalc(
+    const { book, bookGrade } = commentBelongsToTheUserLogged;
+
+    const { totalGrade, counterGrade, avgGrade } = avgGradeCalc(
       0,
-      book.totalGrade - comment.bookGrade,
+      book.totalGrade - bookGrade,
       book.counterGrade - 2,
     );
-
-    const { totalGrade, counterGrade, avgGrade } = bookGrades;
-
-    await this.repository.book.update({
-      where: {
-        id: comment.book.id,
-      },
-      data: {
-        totalGrade,
-        counterGrade,
-        avgGrade,
-      },
+    await this.repository.$transaction(async (txtPrisma: PrismaService) => {
+      await txtPrisma.book.update({
+        where: { id: book.id },
+        data: {
+          totalGrade,
+          counterGrade,
+          avgGrade,
+        },
+      });
+      await txtPrisma.comment.delete({
+        where: { id },
+      });
     });
-
-    await this.repository.comment.delete({
-      where: {
-        id,
-      },
-    });
+    return;
   }
 
   private async getBookById(id: string) {
@@ -192,6 +200,7 @@ export class CommentsService {
         id,
         userId,
       },
+      ...this.selectFields,
     });
   }
 }
