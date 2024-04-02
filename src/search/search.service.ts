@@ -105,4 +105,55 @@ export class SearchService {
       where: { genderId: { in: genresId } },
     });
   }
+  async findAll(query: string) {
+    return await this.prisma.book.findMany({
+      where: {
+        OR: [
+          { name: { contains: query } },
+          { synopsis: { contains: query } },
+          { LiteraryAwards: { some: { name: { contains: query } } } },
+          { gender: { gender: { contains: query } } },
+          { AuthorBook: { some: { author: { name: { contains: query } } } } },
+          {
+            AuthorBook: {
+              some: { author: { carrerDescription: { contains: query } } },
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        name: true,
+        imageUrl: true,
+        publishYear: true,
+        publishingCompany: true,
+        totalGrade: true,
+        counterGrade: true,
+        avgGrade: true,
+        synopsis: true,
+        gender: { select: { gender: true } },
+        isbn13: true,
+        isMovie: true,
+        totalPages: true,
+        LiteraryAwards: { select: { id: true, name: true, year: true } },
+        AuthorBook: {
+          select: {
+            author: {
+              select: {
+                id: true,
+                name: true,
+                carrerDescription: true,
+                imageUrl: true,
+                sexGender: true,
+                birthplace: true,
+                avgGrade: true,
+                counterGrade: true,
+                totalGrade: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
