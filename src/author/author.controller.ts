@@ -22,6 +22,7 @@ import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryAuthorDto } from './dto/query-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @Controller('authors')
 export class AuthorController {
@@ -57,13 +58,18 @@ export class AuthorController {
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
   @Get()
-  findAll(@Query() query: QueryAuthorDto) {
+  findAll(@Query() query: QueryAuthorDto, @Query() pagination: PaginationDto) {
     const { add, genresId } = query;
 
     const genresArray = typeof genresId === 'string' ? [genresId] : genresId;
     const addArray = typeof add === 'string' ? [add] : add;
 
-    return this.authorService.findAll(genresArray, addArray);
+    return this.authorService.findAll(
+      genresArray,
+      addArray,
+      pagination.page,
+      pagination.quantityPerPage,
+    );
   }
 
   @ApiTags('Authors')

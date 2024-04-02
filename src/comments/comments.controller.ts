@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import { AuthGuard } from 'src/guards/authUser/authUser.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @UseGuards(AuthGuard)
 @Controller('comments')
@@ -31,8 +33,11 @@ export class CommentsController {
   }
 
   @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.commentsService.findAll(
+      pagination.page,
+      pagination.quantityPerPage,
+    );
   }
 
   @Get(':id')

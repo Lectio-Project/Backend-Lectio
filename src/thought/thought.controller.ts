@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
@@ -13,6 +14,7 @@ import { AuthGuard } from 'src/guards/authUser/authUser.guard';
 import { CreateThoughtDto } from './dto/create-thought.dto';
 import { UpdateThoughtDto } from './dto/update-thought.dto';
 import { ThoughtService } from './thought.service';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @UseGuards(AuthGuard)
 @Controller('thought')
@@ -27,8 +29,11 @@ export class ThoughtController {
   }
 
   @Get()
-  findAll() {
-    return this.thoughtService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.thoughtService.findAll(
+      pagination.page,
+      pagination.quantityPerPage,
+    );
   }
 
   @Get(':id')
