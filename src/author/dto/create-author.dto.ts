@@ -51,4 +51,12 @@ export class CreateAuthorDto {
   })
   @IsNotEmpty({ message: 'O campo id do gênero é obrigatório' })
   genresId: string | Array<string>;
+
+  @ApiProperty()
+  @IsString({
+    message:
+      'O campo local de nascimento deve ser uma string ex: male ou women',
+  })
+  @IsNotEmpty({ message: 'O campo local de nascimento é obrigatório' })
+  sexGender: 'male' | 'women';
 }
