@@ -3,7 +3,7 @@ export function calculatePagination(
   page: number = 1,
   quantityPerPage: number = 20,
 ) {
-  const totalPage = amountRows / quantityPerPage;
+  const totalPage = Math.ceil(amountRows / quantityPerPage);
 
   if (page > totalPage) {
     return {
