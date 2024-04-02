@@ -9,6 +9,7 @@ import {
   ParseFilePipe,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -24,6 +25,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @Controller('users')
 export class UsersController {
@@ -63,8 +65,11 @@ export class UsersController {
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.usersService.findAll(
+      pagination.page,
+      pagination.quantityPerPage,
+    );
   }
 
   @ApiTags('Users')

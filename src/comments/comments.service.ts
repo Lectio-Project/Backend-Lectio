@@ -7,6 +7,7 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import avgGradeCalc from 'src/utils/avgGrade';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 
 @Injectable()
 export class CommentsService {
@@ -57,7 +58,22 @@ export class CommentsService {
     });
   }
 
-  async findAll() {
+  async findAll(page?: number, quantityPerPage?: number) {
+    if (page || quantityPerPage) {
+      const amountRows = await this.repository.comment.count();
+      const { skip, take, pagination } = calculatePagination(
+        amountRows,
+        page,
+        quantityPerPage,
+      );
+
+      const rows = await this.repository.comment.findMany({
+        skip,
+        take,
+      });
+
+      return [pagination, ...rows];
+    }
     return await this.repository.comment.findMany();
   }
 

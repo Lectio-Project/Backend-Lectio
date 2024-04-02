@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 
 @Injectable()
 export class GenresService {
@@ -25,8 +26,24 @@ export class GenresService {
     });
   }
 
-  async findAll() {
-    return await this.repository.gender.findMany();
+  async findAll(page?: number, quantityPerPage?: number) {
+    if (page || quantityPerPage) {
+      const amountRows = await this.repository.gender.count();
+      const { skip, take, pagination } = calculatePagination(
+        amountRows,
+        page,
+        quantityPerPage,
+      );
+
+      const rows = await this.repository.gender.findMany({
+        skip,
+        take,
+      });
+
+      return [pagination, ...rows];
+    }
+
+    return this.repository.gender.findMany();
   }
 
   async findOne(id: string) {

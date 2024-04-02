@@ -10,6 +10,7 @@ import upload from 'src/utils/bucketIntegration/upload';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 
 interface IFilters extends Omit<QueryBookDto, 'add'> {}
 
@@ -51,7 +52,12 @@ export class BookService {
     return response;
   }
 
-  async findAll(add?: Array<string>, filters?: IFilters) {
+  async findAll(
+    add?: Array<string>,
+    filters?: IFilters,
+    page?: number,
+    quantityPerPage?: number,
+  ) {
     const query = {
       select: this.selectFieldsResult(),
     };
@@ -70,6 +76,22 @@ export class BookService {
       query.select = this.selectFieldsResult({
         fields: newAdd,
       });
+    }
+
+    if (page || quantityPerPage) {
+      const amountRows = await this.repository.book.count();
+      const { skip, take, pagination } = calculatePagination(
+        amountRows,
+        page,
+        quantityPerPage,
+      );
+
+      const rows = await this.repository.book.findMany({
+        skip,
+        take,
+      });
+
+      return [pagination, ...rows];
     }
 
     return await this.repository.book.findMany(query);
