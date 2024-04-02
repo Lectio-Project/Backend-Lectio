@@ -60,6 +60,7 @@ async function userRegistration(prisma: PrismaClient): Promise<void> {
       update: {},
       create: {
         ...user,
+        checkOnBoarding: user.checkOnBoarding ?? false,
         UserGenres: {
           create: (user.UserGenres as string[]).map(genderId => ({ genderId })),
         },
