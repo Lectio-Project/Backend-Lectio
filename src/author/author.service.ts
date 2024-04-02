@@ -6,6 +6,7 @@ import deleteFile from 'src/utils/bucketIntegration/delete';
 import upload from 'src/utils/bucketIntegration/upload';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 
 @Injectable()
 export class AuthorService {
@@ -57,7 +58,12 @@ export class AuthorService {
     return response;
   }
 
-  async findAll(genresId?: Array<string>, add?: Array<string>) {
+  async findAll(
+    genresId?: Array<string>,
+    add?: Array<string>,
+    page?: number,
+    quantityPerPage?: number,
+  ) {
     const newAdd = add ? [...new Set([...add])] : [];
     let query = {};
 
@@ -82,6 +88,22 @@ export class AuthorService {
       ...query,
       select: selectFields,
     };
+
+    if (page || quantityPerPage) {
+      const amountRows = await this.repository.author.count();
+      const { skip, take, pagination } = calculatePagination(
+        amountRows,
+        page,
+        quantityPerPage,
+      );
+
+      const rows = await this.repository.author.findMany({
+        skip,
+        take,
+      });
+
+      return [pagination, ...rows];
+    }
 
     return await this.repository.author.findMany(query);
   }

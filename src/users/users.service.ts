@@ -15,6 +15,7 @@ import generateUsername from 'src/utils/formats/createUsername';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 dotenv.config();
 
 @Injectable()
@@ -118,7 +119,24 @@ export class UsersService {
     };
   }
 
-  async findAll() {
+  async findAll(page?: number, quantityPerPage?: number) {
+    if (page || quantityPerPage) {
+      const amountRows = await this.repository.user.count();
+      const { skip, take, pagination } = calculatePagination(
+        amountRows,
+        page,
+        quantityPerPage,
+      );
+
+      const rows = await this.repository.user.findMany({
+        select: { ...this.selectFields },
+        skip,
+        take,
+      });
+
+      return [pagination, ...rows];
+    }
+
     return await this.repository.user.findMany({
       select: this.selectFields,
     });

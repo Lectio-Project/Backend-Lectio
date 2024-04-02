@@ -1,11 +1,14 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +18,7 @@ import { AuthGuard } from 'src/guards/authUser/authUser.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @UseGuards(AuthGuard)
 @Controller('comments')
@@ -29,8 +33,11 @@ export class CommentsController {
   }
 
   @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.commentsService.findAll(
+      pagination.page,
+      pagination.quantityPerPage,
+    );
   }
 
   @Get(':id')
@@ -44,10 +51,16 @@ export class CommentsController {
     @Param('id') id: string,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
+    if (!updateCommentDto.bookGrade && !updateCommentDto.text) {
+      throw new BadRequestException(
+        'Preencha pelo menos um campo: text ou bookGrade',
+      );
+    }
     return this.commentsService.update(req.user.id, id, updateCommentDto);
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id') id: string, @Req() req: Request) {
     return this.commentsService.remove(id, req.user.id);
   }

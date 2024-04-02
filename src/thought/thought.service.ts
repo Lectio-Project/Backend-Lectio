@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 import { CreateThoughtDto } from './dto/create-thought.dto';
 import { UpdateThoughtDto } from './dto/update-thought.dto';
 
@@ -41,8 +42,24 @@ export class ThoughtService {
     });
   }
 
-  async findAll() {
-    return await this.repository.thought.findMany(this.selectFields);
+  async findAll(page?: number, quantityPerPage?: number) {
+    if (page || quantityPerPage) {
+      const amountRows = await this.repository.thought.count();
+      const { skip, take, pagination } = calculatePagination(
+        amountRows,
+        page,
+        quantityPerPage,
+      );
+
+      const rows = await this.repository.thought.findMany({
+        skip,
+        take,
+      });
+
+      return [pagination, ...rows];
+    }
+
+    return await this.repository.thought.findMany();
   }
 
   async findOne(id: string) {

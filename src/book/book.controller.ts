@@ -21,6 +21,7 @@ import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @Controller('books')
 export class BookController {
@@ -55,10 +56,15 @@ export class BookController {
 
   @ApiTags('Books')
   @Get()
-  findAll(@Query() query: QueryBookDto) {
+  findAll(@Query() query: QueryBookDto, @Query() pagination: PaginationDto) {
     const { add, ...rest } = query;
     const addArray = typeof add === 'string' ? [add] : add;
-    return this.bookService.findAll(addArray, rest);
+    return this.bookService.findAll(
+      addArray,
+      rest,
+      pagination.page,
+      pagination.quantityPerPage,
+    );
   }
 
   @ApiTags('Books')
