@@ -1,11 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateThoughtDto } from './dto/create-thought.dto';
 import { UpdateThoughtDto } from './dto/update-thought.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ThoughtService {
   constructor(private readonly repository: PrismaService) {}
+
+  selectFields = {
+    select: {
+      id: true,
+      text: true,
+      bookId: true,
+      createdAt: true,
+      updatedAt: true,
+      book: {
+        select: {
+          id: true,
+          name: true,
+          imageUrl: true,
+          AuthorBook: { select: { author: { select: { name: true } } } },
+        },
+      },
+    },
+  };
 
   async create(createThoughtDto: CreateThoughtDto) {
     const book = await this.getBookById(createThoughtDto.bookId);
@@ -19,16 +37,18 @@ export class ThoughtService {
         text: createThoughtDto.phrase,
         bookId: book.id,
       },
+      ...this.selectFields,
     });
   }
 
   async findAll() {
-    return await this.repository.thought.findMany();
+    return await this.repository.thought.findMany(this.selectFields);
   }
 
   async findOne(id: string) {
     return await this.repository.thought.findUniqueOrThrow({
       where: { id },
+      ...this.selectFields,
     });
   }
 
@@ -47,6 +67,7 @@ export class ThoughtService {
         text: updateThoughtDto.phrase,
         bookId: book.id,
       },
+      ...this.selectFields,
     });
   }
 
