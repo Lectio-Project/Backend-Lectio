@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { SexGender } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import avgGradeCalc from 'src/utils/avgGrade';
 import deleteFile from 'src/utils/bucketIntegration/delete';
@@ -32,6 +33,10 @@ export class AuthorService {
         const author = txtPrisma.author.create({
           data: {
             ...rest,
+            sexGender:
+              createAuthorDto.sexGender === 'male'
+                ? SexGender.male
+                : SexGender.woman,
             Genders: {
               create: (genresId as Array<string>).map(id => ({
                 gender: {
@@ -185,6 +190,10 @@ export class AuthorService {
           where: { id },
           data: {
             ...data,
+            sexGender:
+              updateAuthorDto.sexGender === 'male'
+                ? SexGender.male
+                : SexGender.woman,
             Genders: {
               create: (genresId as Array<string>)?.map(id => ({
                 gender: {

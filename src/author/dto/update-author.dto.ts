@@ -44,10 +44,12 @@ export class UpdateAuthorDto extends PartialType(CreateAuthorDto) {
   @IsNumberString(
     {},
     {
-      message:
-        'O campo ano de publicação do livro deve ser uma string numérica',
+      message: 'O campo grade deve ser uma string numérica',
     },
   )
   @IsOptional()
   grade?: string;
+
+  @ApiProperty({ required: false })
+  sexGender: 'male' | 'women';
 }

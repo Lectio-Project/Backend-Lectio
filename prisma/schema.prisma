@@ -98,6 +98,7 @@ model Author {
   totalGrade        Float?         @default(0)
   counterGrade      Int?           @default(0)
   avgGrade          Float?         @default(0)
+  sexGender         SexGender
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
   Genders           GenderAuthor[]
@@ -178,4 +179,10 @@ model LiteraryAwards {
 
   @@unique([name, bookId, year])
   @@map("literary_awards")
+
 }
+
+enum SexGender {
+  male
+  woman
+  }
