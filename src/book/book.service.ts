@@ -18,18 +18,18 @@ export class BookService {
   constructor(private readonly repository: PrismaService) {}
 
   async create(createBookDto: CreateBookDto, image: Express.Multer.File) {
-    const { authorId, ...rest } = createBookDto;
+    const { authorId, imageUrl: imageUrlDto, awards, ...rest } = createBookDto;
 
     await this.validateInitialDataInDb({
       ...rest,
       authorId: authorId as Array<string>,
     });
 
-    const imageUrl = await upload(image, 'books');
+    const imageUrl = imageUrlDto || (await upload(image, 'books'));
 
-    const response = await this.repository.$transaction(
+    const bookId = await this.repository.$transaction(
       async (txtPrisma: PrismaService) => {
-        const book = await txtPrisma.book.create({
+        const { id: bookId } = await txtPrisma.book.create({
           data: {
             ...rest,
             imageUrl,
@@ -41,14 +41,28 @@ export class BookService {
               })),
             },
           },
-          select: this.selectFieldsResult(),
+          select: { id: true },
         });
+        const awardsData = awards?.map(award => ({
+          name: award.name,
+          year: award.year,
+          bookId: bookId,
+        }));
 
-        return book;
+        awardsData
+          ? await txtPrisma.literaryAwards.createMany({
+              data: awardsData,
+            })
+          : null;
+
+        return bookId;
       },
     );
 
-    return response;
+    return this.repository.book.findUnique({
+      where: { id: bookId },
+      select: this.selectFieldsResult(),
+    });
   }
 
   async findAll(add?: Array<string>, filters?: IFilters) {
@@ -95,7 +109,13 @@ export class BookService {
     updateBookDto: UpdateBookDto,
     image: Express.Multer.File,
   ) {
-    const { authorId, grade, ...rest } = updateBookDto;
+    const {
+      authorId,
+      grade,
+      imageUrl: imageUrlDto,
+      awards,
+      ...rest
+    } = updateBookDto;
 
     let data = { ...rest };
 
@@ -105,8 +125,8 @@ export class BookService {
       idBook: id,
     });
 
-    if (image) {
-      data['imageUrl'] = await upload(image, 'books');
+    if (image || imageUrlDto) {
+      data['imageUrl'] = imageUrlDto || (await upload(image, 'books'));
     }
 
     if (grade) {
@@ -127,6 +147,22 @@ export class BookService {
             },
           });
         }
+        if (awards) {
+          await txtPrisma.literaryAwards.deleteMany({
+            where: {
+              bookId: id,
+            },
+          });
+          const awardsData = awards.map(award => ({
+            name: award.name,
+            year: award.year,
+            bookId: id,
+          }));
+
+          await txtPrisma.literaryAwards.createMany({
+            data: awardsData,
+          });
+        }
         const book = await txtPrisma.book.update({
           where: { id },
           data: {
@@ -145,7 +181,6 @@ export class BookService {
         return book;
       },
     );
-
     return newBook;
   }
 
@@ -166,8 +201,9 @@ export class BookService {
     genderId?: string;
     name?: string;
     idBook?: string;
+    isbn13?: string;
   }) {
-    const { authorId, genderId, name, idBook } = data;
+    const { authorId, genderId, name, idBook, isbn13 } = data;
 
     const promises = {
       authorId: async (authorIds: Array<string>) => {
@@ -187,27 +223,52 @@ export class BookService {
           },
         });
       },
+      isbn13: async (isbn13: string) => {
+        return this.repository.book.findUnique({
+          where: { isbn13 },
+        });
+      },
     };
 
+    const fieldsFind = {};
     const queries = [];
     let book;
 
-    authorId ? queries.push(promises.authorId(authorId)) : null;
-    genderId ? queries.push(promises.genderId(genderId)) : null;
-    name ? queries.push(promises.name(name, idBook)) : null;
+    authorId
+      ? (queries.push(promises.authorId(authorId)),
+        (fieldsFind['authorId'] = Object.keys(fieldsFind).length))
+      : null;
+    genderId
+      ? (queries.push(promises.genderId(genderId)),
+        (fieldsFind['genderId'] = Object.keys(fieldsFind).length))
+      : null;
+    name
+      ? (queries.push(promises.name(name, idBook)),
+        (fieldsFind['name'] = Object.keys(fieldsFind).length))
+      : null;
+    isbn13
+      ? (queries.push(promises.isbn13(isbn13)),
+        (fieldsFind['isbn13'] = Object.keys(fieldsFind).length))
+      : null;
 
     const results = await Promise.all(queries);
 
-    if (authorId && results[0].length !== authorId.length) {
+    if (
+      authorId &&
+      results[fieldsFind['authorId']].length !== authorId.length
+    ) {
       throw new NotFoundException('Autor não encontrado');
     }
 
-    if (name && results[results.length - 1]) {
-      const bookResult = results[results.length - 1] as Book;
-      if (bookResult.id !== idBook) {
+    if (name) {
+      const bookResult = results[fieldsFind['name']] as Book;
+      if (bookResult && bookResult.name === name) {
         throw new ConflictException('O livro já existe');
       }
-      book = bookResult;
+    }
+
+    if (isbn13 && results[fieldsFind['isbn13']]) {
+      throw new ConflictException('O isbn-13 já existe');
     }
 
     return book as Book;
@@ -227,6 +288,7 @@ export class BookService {
       createdAt: true,
       updatedAt: true,
       gender: true,
+      totalPages: true,
       AuthorBook: {
         select: {
           author: {
@@ -238,6 +300,7 @@ export class BookService {
           },
         },
       },
+      LiteraryAwards: { select: { id: true, name: true, year: true } },
     };
 
     if (!options) {
