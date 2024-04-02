@@ -5,20 +5,10 @@ export function calculatePagination(
 ) {
   const totalPage = Math.ceil(amountRows / quantityPerPage);
 
-  if (page > totalPage) {
-    return {
-      skip: 0,
-      take: 0,
-      totalPage,
-      pagination: {
-        page: totalPage,
-        totalPage,
-        quantityPerPage,
-      },
-    };
-  }
-
-  const skip = totalPage >= page ? (page - 1) * quantityPerPage : totalPage;
+  const skip =
+    totalPage >= page
+      ? (page - 1) * quantityPerPage
+      : (totalPage - 1) * quantityPerPage;
   const take = quantityPerPage;
 
   const pagination = {
