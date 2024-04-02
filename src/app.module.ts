@@ -8,6 +8,7 @@ import { BookModule } from './book/book.module';
 import { CommentsModule } from './comments/comments.module';
 import { ThoughtModule } from './thought/thought.module';
 import { AdminModule } from './admin/admin.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AdminModule } from './admin/admin.module';
     CommentsModule,
     ThoughtModule,
     AdminModule,
+    SearchModule,
   ],
   controllers: [],
   providers: [],
