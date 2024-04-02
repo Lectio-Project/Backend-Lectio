@@ -92,7 +92,8 @@ export class CommentsService {
 
       return [pagination, ...rows];
     }
-    return await this.repository.comment.findMany();
+
+    return await this.repository.comment.findMany(this.selectFields);
   }
 
   async findOne(id: string) {
