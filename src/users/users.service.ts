@@ -32,6 +32,7 @@ export class UsersService {
     imageUrl: true,
     createdAt: true,
     updatedAt: true,
+    checkOnBoarding: true,
     UserBook: { select: { book: true } },
     UserGenres: { select: { gender: true } },
     UserAuthor: { select: { author: true } },
@@ -63,13 +64,13 @@ export class UsersService {
       createUserDto.userName || generateUsername(createUserDto.name);
 
     const passwordHashed = await bcryptjs.hash(createUserDto.password, 8);
-    console.log(passwordHashed);
 
     const { confirmPassword, userName, ...rest } = createUserDto;
 
     const user = await this.repository.user.create({
       data: {
         ...rest,
+        checkOnBoarding: false,
         password: passwordHashed,
         username: userName,
       },
@@ -174,6 +175,7 @@ export class UsersService {
       where: { id },
       data: {
         ...rest,
+        checkOnBoarding: updateUserDto.checkOnBoarding || false,
         ...updates,
       },
       select: this.selectFields,
