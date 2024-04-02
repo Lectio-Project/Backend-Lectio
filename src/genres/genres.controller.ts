@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
@@ -14,6 +15,7 @@ import { AuthGuard } from 'src/guards/authUser/authUser.guard';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { GenresService } from './genres.service';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @Controller('genres')
 export class GenresController {
@@ -31,8 +33,11 @@ export class GenresController {
   @ApiSecurity('JWT-auth')
   @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.genresService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.genresService.findAll(
+      pagination.page,
+      pagination.quantityPerPage,
+    );
   }
 
   @ApiTags('Genres')
