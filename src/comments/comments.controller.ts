@@ -1,8 +1,10 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -49,10 +51,16 @@ export class CommentsController {
     @Param('id') id: string,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
+    if (!updateCommentDto.bookGrade && !updateCommentDto.text) {
+      throw new BadRequestException(
+        'Preencha pelo menos um campo: text ou bookGrade',
+      );
+    }
     return this.commentsService.update(req.user.id, id, updateCommentDto);
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id') id: string, @Req() req: Request) {
     return this.commentsService.remove(id, req.user.id);
   }

@@ -8,20 +8,21 @@ datasource db {
 }
 
 model User {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  email      String       @unique
-  password   String
-  username   String?      @unique
-  bio        String?
-  imageUrl   String?
-  termsOfUse Boolean
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  UserGenres UserGender[]
-  Comment    Comment[]
-  UserAuthor UserAuthor[]
-  UserBook   UserBook[]
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String       @unique
+  password        String
+  username        String?      @unique
+  bio             String?
+  imageUrl        String?
+  termsOfUse      Boolean      @default(false)
+  checkOnBoarding Boolean
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  UserGenres      UserGender[]
+  Comment         Comment[]
+  UserAuthor      UserAuthor[]
+  UserBook        UserBook[]
 
   @@map("users")
 }
@@ -55,6 +56,7 @@ model UserGender {
   user     User   @relation(fields: [userId], references: [id])
   userId   String @db.ObjectId
 
+  @@unique([genderId, userId])
   @@map("user_genres")
 }
 
@@ -110,7 +112,7 @@ model Author {
 
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  text      String
+  text      String?
   bookGrade Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -144,6 +146,7 @@ model Book {
   totalPages        String
   publishingCompany String
   publishYear       String
+  isMovie           Boolean
   genderId          String           @db.ObjectId
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -179,10 +182,9 @@ model LiteraryAwards {
 
   @@unique([name, bookId, year])
   @@map("literary_awards")
-
 }
 
 enum SexGender {
   male
   woman
-  }
+}

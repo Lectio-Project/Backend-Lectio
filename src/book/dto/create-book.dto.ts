@@ -88,4 +88,9 @@ export class CreateBookDto {
   @ValidateNested({ each: true })
   @Type(() => CreateLiteraryAwardsDto)
   awards?: Array<CreateLiteraryAwardsDto>;
+
+  @ApiProperty({ required: false })
+  @Type(() => Boolean)
+  @IsOptional()
+  isMovie?: boolean = false;
 }

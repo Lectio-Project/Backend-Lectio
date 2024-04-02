@@ -34,6 +34,7 @@ export class BookService {
           data: {
             ...rest,
             imageUrl,
+            isMovie: createBookDto.isMovie || false,
             AuthorBook: {
               create: (authorId as Array<string>).map(author => ({
                 author: {
@@ -189,6 +190,7 @@ export class BookService {
           where: { id },
           data: {
             ...data,
+            isMovie: updateBookDto.isMovie || false,
             AuthorBook: {
               create: (authorId as Array<string>)?.map(author => ({
                 author: {
@@ -310,6 +312,7 @@ export class BookService {
       createdAt: true,
       updatedAt: true,
       gender: true,
+      isMovie: true,
       totalPages: true,
       AuthorBook: {
         select: {
