@@ -21,6 +21,7 @@ async function userRegistration(prisma: PrismaClient): Promise<void> {
         '6051a5fe4a3d7e126c9d24b2',
         '6051a5fe4a3d7e126c9d24b3',
       ],
+      checkOnBoarding: true,
       UserBook: [
         '6051a5fe4a3d7e126c9d24b1',
         '6051a5fe4a3d7e126c9d24b2',

@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 import { IsArrayOfIdStrings } from 'src/utils/validators/IsArrayOfIdStrings';
 import { CreateUserDto } from './create-user.dto';
 
@@ -57,4 +58,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
       'O campo id do livro deve conter um array de strings no formato ObjectId',
   })
   booksId?: Array<string>;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  checkOnBoarding?: boolean = false;
 }

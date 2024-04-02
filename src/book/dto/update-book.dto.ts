@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsNumberString, IsOptional } from 'class-validator';
 import { CreateBookDto } from './create-book.dto';
 import { UpdateLiteraryAwardsDto } from './update-literary-awards.dto';
@@ -61,4 +62,9 @@ export class UpdateBookDto extends PartialType(CreateBookDto) {
 
   @ApiProperty({ type: () => [UpdateLiteraryAwardsDto], required: false })
   awards?: Array<UpdateLiteraryAwardsDto>;
+
+  @ApiProperty({ required: false })
+  @Type(() => Boolean)
+  @IsOptional()
+  isMovie?: boolean = false;
 }
