@@ -106,7 +106,7 @@ export class UsersService {
 
     const token = this.jwt.generateToken(user);
 
-    const { id, name, email, username, bio, imageUrl } = user;
+    const { id, name, email, username, bio, imageUrl, checkOnBoarding } = user;
 
     return {
       id,
@@ -115,6 +115,7 @@ export class UsersService {
       username,
       bio,
       imageUrl,
+      checkOnBoarding,
       token,
     };
   }

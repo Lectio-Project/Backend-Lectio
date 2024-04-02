@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { calculatePagination } from 'src/utils/pagination/pagination-function';
 import { CreateThoughtDto } from './dto/create-thought.dto';
 import { UpdateThoughtDto } from './dto/update-thought.dto';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 
 @Injectable()
 export class ThoughtService {
