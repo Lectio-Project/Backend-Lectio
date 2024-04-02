@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { SexGender } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import avgGradeCalc from 'src/utils/avgGrade';
 import deleteFile from 'src/utils/bucketIntegration/delete';
 import upload from 'src/utils/bucketIntegration/upload';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -32,6 +34,10 @@ export class AuthorService {
         const author = txtPrisma.author.create({
           data: {
             ...rest,
+            sexGender:
+              createAuthorDto.sexGender === 'male'
+                ? SexGender.male
+                : SexGender.woman,
             Genders: {
               create: (genresId as Array<string>).map(id => ({
                 gender: {
@@ -122,7 +128,7 @@ export class AuthorService {
     updateAuthorDto: UpdateAuthorDto,
     image: Express.Multer.File,
   ) {
-    const { genresId, usersId, ...rest } = updateAuthorDto;
+    const { genresId, usersId, grade, ...rest } = updateAuthorDto;
     const queries = [];
     if (image) {
       queries.push(upload(image, 'authors'));
@@ -163,6 +169,23 @@ export class AuthorService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
+    const author = await this.repository.author.findUnique({
+      where: { id },
+    });
+
+    let data = { ...rest };
+    if (grade) {
+      const result = avgGradeCalc(
+        +grade,
+        author.totalGrade,
+        author.counterGrade,
+      );
+      data = {
+        ...data,
+        ...result,
+      };
+    }
+
     const response = await this.repository.$transaction(
       async (txtPrisma: PrismaService) => {
         const queries = [];
@@ -188,7 +211,11 @@ export class AuthorService {
         const author = txtPrisma.author.update({
           where: { id },
           data: {
-            ...rest,
+            ...data,
+            sexGender:
+              updateAuthorDto.sexGender === 'male'
+                ? SexGender.male
+                : SexGender.woman,
             Genders: {
               create: (genresId as Array<string>)?.map(id => ({
                 gender: {
@@ -248,6 +275,9 @@ export class AuthorService {
       carrerDescription: true,
       createdAt: true,
       updatedAt: true,
+      totalGrade: true,
+      counterGrade: true,
+      avgGrade: true,
     };
 
     if (!options) {

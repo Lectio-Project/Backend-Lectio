@@ -64,6 +64,8 @@ export class UsersService {
       createUserDto.userName || generateUsername(createUserDto.name);
 
     const passwordHashed = await bcryptjs.hash(createUserDto.password, 8);
+    console.log(passwordHashed);
+
     const { confirmPassword, userName, ...rest } = createUserDto;
 
     const user = await this.repository.user.create({
@@ -201,9 +203,21 @@ export class UsersService {
   async remove(id: string) {
     const user = await this.repository.$transaction(
       async (txtPrisma: PrismaService) => {
-        await txtPrisma.comment.deleteMany({
-          where: { userId: id },
-        });
+        const queries = [
+          txtPrisma.comment.deleteMany({
+            where: { userId: id },
+          }),
+          txtPrisma.userBook.deleteMany({
+            where: { userId: id },
+          }),
+          txtPrisma.userAuthor.deleteMany({
+            where: { userId: id },
+          }),
+          txtPrisma.userGender.deleteMany({
+            where: { userId: id },
+          }),
+        ];
+        await Promise.all(queries);
         return await txtPrisma.user.delete({
           where: { id },
         });

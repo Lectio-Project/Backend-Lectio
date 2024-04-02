@@ -112,11 +112,12 @@ export class UsersController {
     if (updateUserDto.password !== updateUserDto.confirmPassword) {
       throw new BadRequestException('As senhas devem ser iguais');
     }
+    // const { authorsId } = updateUserDto;
 
-    updateUserDto.authorsId =
-      typeof updateUserDto.authorsId === 'string'
-        ? [updateUserDto.authorsId]
-        : updateUserDto.authorsId;
+    // updateUserDto.authorsId =
+    //   authorsId && typeof authorsId === 'string'
+    //     ? [updateUserDto.authorsId]
+    //     : updateUserDto.authorsId;
     updateUserDto.booksId =
       typeof updateUserDto.booksId === 'string'
         ? [updateUserDto.booksId]
@@ -142,9 +143,9 @@ export class UsersController {
   @ApiTags('Admin/Users')
   @ApiSecurity('JWT-auth')
   @UseGuards(AdminGuard)
-  @Patch(':idUser')
+  @Patch(':id')
   updateForAdmin(
-    @Param() idUser: string,
+    @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -165,15 +166,17 @@ export class UsersController {
       }
     }
 
-    return this.usersService.update(idUser, updateUserDto, image);
+    return this.usersService.update(id, updateUserDto, image);
   }
 
   @HttpCode(204)
   @ApiTags('Admin/Users')
   @ApiSecurity('JWT-auth')
   @UseGuards(AdminGuard)
-  @Delete(':idUser')
-  removeForAdmin(@Param() idUser: string) {
-    return this.usersService.remove(idUser);
+  @Delete(':id')
+  removeForAdmin(@Param('id') id: string) {
+    console.log('id', id);
+
+    return this.usersService.remove(id);
   }
 }

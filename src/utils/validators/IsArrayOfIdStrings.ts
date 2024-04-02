@@ -7,13 +7,10 @@ import {
 } from 'class-validator';
 
 @ValidatorConstraint({ name: 'isArrayOrString', async: false })
-export class IsArrayOfIdStringsOrIdStringConstraint
+export class IsArrayOfIdStringsConstraint
   implements ValidatorConstraintInterface
 {
-  validate(value: string | Array<string> | undefined) {
-    if (typeof value === 'string' && value.length === 24) {
-      return true;
-    }
+  validate(value: Array<string> | undefined) {
     if (Array.isArray(value)) {
       return value.every(
         item => typeof item === 'string' && item.length === 24,
@@ -31,13 +28,8 @@ export class IsArrayOfIdStringsOrIdStringConstraint
   }
 }
 
-export function IsArrayOfIdStringsOrIdString(
-  validationOptions?: ValidationOptions,
-) {
+export function IsArrayOfIdStrings(validationOptions?: ValidationOptions) {
   return function (object: Record<string, any>, property: string) {
-    Validate(IsArrayOfIdStringsOrIdStringConstraint, validationOptions)(
-      object,
-      property,
-    );
+    Validate(IsArrayOfIdStringsConstraint, validationOptions)(object, property);
   };
 }
