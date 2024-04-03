@@ -8,7 +8,7 @@ export class QuerySearchCategoriesDto {
   @IsOptional()
   isMovie?: boolean = false;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, enum: ['male', 'women'] })
   @IsIn(['male', 'woman'], {
     message: 'O campo sexGenderAuthor deve ser uma string ex: male ou women',
   })

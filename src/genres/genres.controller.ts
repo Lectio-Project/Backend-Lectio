@@ -12,10 +12,10 @@ import {
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/guards/authAdmin/authAdmin.guard';
 import { AuthGuard } from 'src/guards/authUser/authUser.guard';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { GenresService } from './genres.service';
-import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @Controller('genres')
 export class GenresController {
