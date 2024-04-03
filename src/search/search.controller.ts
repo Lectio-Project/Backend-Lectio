@@ -1,10 +1,21 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/guards/authUser/authUser.guard';
 import { QuerySearchCategoriesDto } from './dto/query-search-categories.dto';
 import { QuerySearchFindDto } from './dto/query-search-find.dto';
 import { QuerySearchGenresDto } from './dto/query-search-genres.dto';
 import { SearchService } from './search.service';
 
 @Controller('search')
+@ApiTags('Search')
+@ApiSecurity('JWT-auth')
+@UseGuards(AuthGuard)
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
@@ -22,8 +33,8 @@ export class SearchController {
   }
 
   @Get('/genres')
-  findAllGenres(@Query() query: QuerySearchGenresDto) {
-    const { genresId } = query;
+  findAllGenres(@Query() queries: QuerySearchGenresDto) {
+    const { genresId } = queries;
     const genresIdArray = typeof genresId === 'string' ? [genresId] : genresId;
 
     return this.searchService.findAllGenres(genresIdArray);

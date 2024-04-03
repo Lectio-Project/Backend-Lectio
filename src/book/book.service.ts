@@ -7,10 +7,10 @@ import { Book } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import avgGradeCalc from 'src/utils/avgGrade';
 import upload from 'src/utils/bucketIntegration/upload';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { calculatePagination } from 'src/utils/pagination/pagination-function';
 
 interface IFilters extends Omit<QueryBookDto, 'add'> {}
 
@@ -372,10 +372,11 @@ export class BookService {
         Comment: {
           select: {
             id: true,
+            bookGrade: true,
             text: true,
             createdAt: true,
             updatedAt: true,
-            userId: true,
+            user: { select: { id: true, name: true, imageUrl: true } },
           },
         },
       };
