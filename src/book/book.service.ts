@@ -313,6 +313,7 @@ export class BookService {
       updatedAt: true,
       gender: true,
       isMovie: true,
+      isbn13: true,
       totalPages: true,
       AuthorBook: {
         select: {
