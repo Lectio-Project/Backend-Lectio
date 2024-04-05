@@ -20,12 +20,12 @@ import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { AdminGuard } from 'src/guards/authAdmin/authAdmin.guard';
 import { AuthGuard } from 'src/guards/authUser/authUser.guard';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
-import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @Controller('users')
 export class UsersController {
@@ -56,6 +56,7 @@ export class UsersController {
   }
 
   @ApiTags('Users')
+  @HttpCode(200)
   @Post('sign-in')
   login(@Body() loginDto: LoginDto) {
     return this.usersService.login(loginDto);
@@ -112,12 +113,7 @@ export class UsersController {
     if (updateUserDto.password !== updateUserDto.confirmPassword) {
       throw new BadRequestException('As senhas devem ser iguais');
     }
-    // const { authorsId } = updateUserDto;
 
-    // updateUserDto.authorsId =
-    //   authorsId && typeof authorsId === 'string'
-    //     ? [updateUserDto.authorsId]
-    //     : updateUserDto.authorsId;
     updateUserDto.booksId =
       typeof updateUserDto.booksId === 'string'
         ? [updateUserDto.booksId]
@@ -175,8 +171,6 @@ export class UsersController {
   @UseGuards(AdminGuard)
   @Delete(':id')
   removeForAdmin(@Param('id') id: string) {
-    console.log('id', id);
-
     return this.usersService.remove(id);
   }
 }
