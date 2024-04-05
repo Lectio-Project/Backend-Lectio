@@ -135,14 +135,30 @@ export class SearchService {
     return await this.prisma.book.findMany({
       where: {
         OR: [
-          { name: { contains: query } },
-          { synopsis: { contains: query } },
-          { LiteraryAwards: { some: { name: { contains: query } } } },
-          { gender: { gender: { contains: query } } },
-          { AuthorBook: { some: { author: { name: { contains: query } } } } },
+          {
+            name: { contains: query, mode: 'insensitive' },
+          },
+          { synopsis: { contains: query, mode: 'insensitive' } },
+          {
+            LiteraryAwards: {
+              some: { name: { contains: query, mode: 'insensitive' } },
+            },
+          },
+          { gender: { gender: { contains: query, mode: 'insensitive' } } },
           {
             AuthorBook: {
-              some: { author: { carrerDescription: { contains: query } } },
+              some: {
+                author: { name: { contains: query, mode: 'insensitive' } },
+              },
+            },
+          },
+          {
+            AuthorBook: {
+              some: {
+                author: {
+                  carrerDescription: { contains: query, mode: 'insensitive' },
+                },
+              },
             },
           },
         ],
