@@ -140,6 +140,7 @@ export class CommentsService {
 
     if (text) {
       newData.newCommentData = {
+        ...newData.newCommentData,
         text,
       };
     }
