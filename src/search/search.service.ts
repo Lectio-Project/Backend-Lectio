@@ -22,6 +22,14 @@ export class SearchService {
       isMovie: true,
       totalPages: true,
       LiteraryAwards: { select: { id: true, name: true, year: true } },
+      Comment: {
+        select: {
+          id: true,
+          bookGrade: true,
+          text: true,
+          user: { select: { name: true, id: true, imageUrl: true } },
+        },
+      },
       AuthorBook: {
         select: {
           author: {
