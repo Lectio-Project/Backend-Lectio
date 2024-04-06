@@ -27,6 +27,8 @@ export class SearchService {
           id: true,
           bookGrade: true,
           text: true,
+          createdAt: true,
+          updatedAt: true,
           user: { select: { name: true, id: true, imageUrl: true } },
         },
       },
