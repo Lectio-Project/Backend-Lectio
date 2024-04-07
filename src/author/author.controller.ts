@@ -17,12 +17,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/guards/authAdmin/authAdmin.guard';
 import { AuthGuard } from 'src/guards/authUser/authUser.guard';
+import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 import { IsValidImageFile } from 'src/utils/validators/IsValidImageFile';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryAuthorDto } from './dto/query-author.dto';
+import { UpdateAuthorGradeDto } from './dto/update-author-grade.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
-import { PaginationDto } from 'src/utils/pagination/pagination.dto';
 
 @Controller('authors')
 export class AuthorController {
@@ -108,6 +109,17 @@ export class AuthorController {
       typeof genresId === 'string' ? [genresId] : genresId;
     updateAuthorDto.usersId = typeof usersId === 'string' ? [usersId] : usersId;
     return this.authorService.update(id, updateAuthorDto, image);
+  }
+
+  @ApiTags('Authors')
+  @ApiSecurity('JWT-auth')
+  @UseGuards(AuthGuard)
+  @Patch('avaliation/:id')
+  updateGrade(
+    @Param('id') id: string,
+    @Body() updateAuthorGradeDto: UpdateAuthorGradeDto,
+  ) {
+    return this.authorService.updateGrade(id, updateAuthorGradeDto);
   }
 
   @ApiTags('Admin/Authors')
