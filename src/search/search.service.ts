@@ -74,12 +74,9 @@ export class SearchService {
 
     if (literaryAwards) {
       executeQueries.push(
-        this.prisma.literaryAwards.findMany({
-          select: {
-            Book: {
-              ...this.selectFields,
-            },
-          },
+        this.prisma.book.findMany({
+          where: { LiteraryAwards: { some: {} } },
+          ...this.selectFields,
         }),
       );
       response['literaryAwards'] = Object.keys(response).length;
@@ -87,11 +84,11 @@ export class SearchService {
 
     if (sexGenderAuthor) {
       executeQueries.push(
-        this.prisma.author.findMany({
-          where: { sexGender: sexGenderAuthor === 'male' ? 'male' : 'woman' },
-          select: {
-            AuthorBook: { select: { book: { ...this.selectFields } } },
+        this.prisma.book.findMany({
+          where: {
+            AuthorBook: { some: { author: { sexGender: sexGenderAuthor } } },
           },
+          ...this.selectFields,
         }),
       );
       response['sexGenderAuthor'] = Object.keys(response).length;
