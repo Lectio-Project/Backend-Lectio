@@ -4,9 +4,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import avgGradeCalc from 'src/utils/avgGrade';
 import deleteFile from 'src/utils/bucketIntegration/delete';
 import upload from 'src/utils/bucketIntegration/upload';
-import { CreateAuthorDto } from './dto/create-author.dto';
-import { UpdateAuthorDto } from './dto/update-author.dto';
 import { calculatePagination } from 'src/utils/pagination/pagination-function';
+import { CreateAuthorDto } from './dto/create-author.dto';
+import { UpdateAuthorGradeDto } from './dto/update-author-grade.dto';
+import { UpdateAuthorDto } from './dto/update-author.dto';
 
 @Injectable()
 export class AuthorService {
@@ -242,6 +243,22 @@ export class AuthorService {
     );
 
     return response;
+  }
+
+  async updateGrade(id: string, updateAuthorGradeDto: UpdateAuthorGradeDto) {
+    const { grade } = updateAuthorGradeDto;
+
+    const author = await this.repository.author.findUnique({
+      where: { id },
+    });
+
+    const result = avgGradeCalc(+grade, author.totalGrade, author.counterGrade);
+
+    return await this.repository.author.update({
+      where: { id },
+      data: { ...result },
+      select: this.selectFieldsResult({ type: 'inserts' }),
+    });
   }
 
   async remove(id: string) {
