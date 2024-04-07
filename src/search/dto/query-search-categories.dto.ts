@@ -13,7 +13,7 @@ export class QuerySearchCategoriesDto {
     message: 'O campo sexGenderAuthor deve ser uma string ex: male ou woman',
   })
   @IsOptional()
-  sexGenderAuthor?: 'male' | 'women';
+  sexGenderAuthor?: 'male' | 'woman';
 
   @ApiProperty({ required: false })
   @Type(() => Boolean)
