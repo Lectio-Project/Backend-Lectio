@@ -12,10 +12,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import deleteFile from 'src/utils/bucketIntegration/delete';
 import upload from 'src/utils/bucketIntegration/upload';
 import generateUsername from 'src/utils/formats/createUsername';
+import { calculatePagination } from 'src/utils/pagination/pagination-function';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { calculatePagination } from 'src/utils/pagination/pagination-function';
 dotenv.config();
 
 @Injectable()
